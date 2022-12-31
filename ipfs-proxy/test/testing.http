@@ -1,0 +1,53 @@
+POST http://localhost:9090/upload HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="metadata"
+
+"{name:'buku baru'}"
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="document"; filename="doc.pdf"
+Content-Type: application/pdf
+
+< ./example.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Download
+# apapun yang dilakukan, nampaknya file tidak bisa jika tidak di ekspose pada pengguna,
+# solusinya (sementara) :
+# 1. percaya pada owner karena dia sudah beli 
+# 2. lacak pemilik terakhir file ini 
+# 3. pastikan pengguna asli dengan watermark (ini masih bisa di improve)
+# 4. semua prosedur diluar sistem dapat diserahkan kepada penegak hukum (masih bisa diimprove dengan membuat fitur pelaporan)
+# 5. poin 4 dapat dilakukan dengan melacak melalui blockchain
+POST http://localhost:9090/get HTTP/1.1
+Content-Type: application/json
+
+{
+    "hash": "QmUFokLnX9GR56sBPCE353u4MrVvJgYGx7XP5n7uXf2hwF"
+}
+
+###
+# POST http://localhost:9090/download HTTP/1.1
+# Content-Type: application/json
+
+# {
+#     "hash": "Qmf6EhLMCchyhDzcMw57FxjgMK1LWvfg6Pm4iEoCM7Ssv9",
+#     "token": "5e0ea6cad0570edadc7f20f0280e8847c67683c75edf4ea04c515f9f5ddd4bfc"
+# }
+
+### test upload
+# POST http://localhost:9090/upload-ipfs HTTP/1.1
+# Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="document"; filename="example.pdf"
+# Content-Type: application/pdf
+
+# < ./example.pdf
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+# ###
+# DELETE http://localhost:9090/rm HTTP/1.1
+# Content-Type: application/json
