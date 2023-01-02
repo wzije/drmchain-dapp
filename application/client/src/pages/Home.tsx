@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PublicationCard from "./publications/Card";
+import PublicationCard from "./explores/Card";
 import Web3 from "web3";
 const publicationContract = require("../contracts/PublicationFactory.json");
 

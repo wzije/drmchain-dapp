@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import Web3 from "web3";
-import MyPublicationApproveDialog from "./MyPublicationApproveDialog";
-import MyPublicationReadDialog from "./MyPublicationReadDialog";
+import MyPublicationApproveDialog from "./ApproveDialog";
+import MyPublicationReadDialog from "./ReadDialog";
 const publicationContract = require("../../contracts/Publication.json");
 
 const dedicatedIPFSURL = "https://wzije.infura-ipfs.io/ipfs";

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
-import { faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
+
 import Web3 from "web3";
 import "./main.css";
 
@@ -22,14 +23,10 @@ const Topbar = () => {
     init();
   }, []);
 
-  const accountIcon = (
+  const bookIcon = (
     <div className="" style={{ float: "left" }}>
-      <img
-        className="rounded-circle border"
-        src="/img/no-profile-icon.png"
-        alt="user"
-        style={{ width: "28px" }}
-      />
+      <Icon icon={faBook} />
+      &nbsp;Books
     </div>
   );
 
@@ -50,26 +47,17 @@ const Topbar = () => {
               <NavLink className="nav-link" to="explores">
                 Explores
               </NavLink>
-              <NavLink className="nav-link" to="me/books/create">
+              <NavLink className="nav-link" to="create">
                 Create
               </NavLink>
-              <NavLink className="nav-link" to="me/books">
-                Library
-              </NavLink>
-              <NavDropdown align="end" title={accountIcon}>
-                <NavLink className="dropdown-item" to="me/profile">
-                  Profile
-                </NavLink>
-                <NavLink className="dropdown-item" to="me/books">
+              <NavDropdown align="end" title={bookIcon}>
+                <NavLink className="dropdown-item" to="mybooks">
                   My Books
                 </NavLink>
-                <NavLink className="dropdown-item" to="me/customers">
-                  My Customers
+                <NavLink className="dropdown-item" to="myrequest">
+                  My Request
                 </NavLink>
               </NavDropdown>
-              <NavLink className="nav-link" to="me/wallets">
-                <Icon icon={faWallet} />
-              </NavLink>
             </Nav>
           </Navbar.Collapse>
         </Container>

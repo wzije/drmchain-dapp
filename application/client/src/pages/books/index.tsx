@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import MyPublicationCard from "./MyPublicationCard";
+import { useEffect, useState } from "react";
+import MyPublicationCard from "./Card";
 import Web3 from "web3";
 const publicationContract = require("../../contracts/PublicationFactory.json");
 
 const MyPublication = () => {
   const [publications, setPublications] = useState([]);
-  const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
     const init = async () => {
@@ -22,14 +21,7 @@ const MyPublication = () => {
           .myPublications()
           .call({ from: accounts[0] });
 
-        const subscriptions = await contract.methods
-          .mySubscriptions()
-          .call({ from: accounts[0] });
-
-        console.info(subscriptions);
-
         setPublications(publications);
-        setSubscriptions(subscriptions);
       } catch (err) {
         console.log(err);
       }
@@ -48,27 +40,11 @@ const MyPublication = () => {
     });
   };
 
-  const displaySubscriptions = () => {
-    return subscriptions.map((address, index) => {
-      return (
-        <div className="col-md-3 pl-1 m-0" key={address}>
-          <MyPublicationCard data={{ address, index }} />
-        </div>
-      );
-    });
-  };
-
   return (
     <>
       <h4>My Publications</h4>
       <hr />
       <div className="row">{displayPublications()}</div>
-
-      <br />
-      <br />
-      <h4>My Subscriptions</h4>
-      <hr />
-      <div className="row">{displaySubscriptions()}</div>
     </>
   );
 };

@@ -1,18 +1,24 @@
 import Topbar from "./pages/main/Topbar";
 import Routers from "./pages/main/Routers";
 import { useEffect } from "react";
+import { Alert } from "./utils/AlertUtil";
 
 declare let window: any;
 
-function App() {
-  window.ethereum.on("accountsChanged", function () {
-    // Time to reload your interface with accounts[0]!
-    window.location.reload();
-  });
+function App(): JSX.Element {
+  if (window.ethereum) {
+    window.ethereum.on("accountsChanged", function () {
+      window.location.reload();
+    });
+  }
 
   useEffect(() => {
     const init = async () => {
       try {
+        if (!window.ethereum) {
+          Alert("Metamask is not installed");
+          return;
+        }
         if (typeof window.ethereum === "undefined") {
           console.log("MetaMask is not installed!");
           return;

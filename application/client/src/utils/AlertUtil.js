@@ -3,8 +3,22 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
-const Alert = (message) => {
-  alert(message);
+export const Alert = (message) => {
+  MySwal.fire({
+    title: <strong>Caution!</strong>,
+    html: <i>{message}</i>,
+    icon: "warning",
+  });
+  return;
 };
 
-export default Alert;
+export const Info = (message) => {
+  MySwal.fire({
+    title: <strong>Caution!</strong>,
+    html: <i>{message}</i>,
+    icon: "info",
+  });
+  return;
+};
+
+export default MySwal;
