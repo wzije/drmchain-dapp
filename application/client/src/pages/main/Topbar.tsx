@@ -35,7 +35,8 @@ const Topbar = () => {
       <Navbar expand="lg" bg="dark" variant="dark">
         <Container>
           <NavLink className="navbar-brand" to="/">
-            DC-PUB
+            BOOKS
+            <div style={{ fontSize: "10pt" }}>DRMCHAIN</div>
           </NavLink>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
@@ -54,7 +55,7 @@ const Topbar = () => {
                 <NavLink className="dropdown-item" to="mybooks">
                   My Books
                 </NavLink>
-                <NavLink className="dropdown-item" to="myrequest">
+                <NavLink className="dropdown-item" to="myrequests">
                   My Request
                 </NavLink>
               </NavDropdown>
@@ -63,12 +64,12 @@ const Topbar = () => {
         </Container>
       </Navbar>
       <Navbar
-        expand="lg"
-        variant="light"
+        className="bg-warning"
         style={{ backgroundColor: "hwb(0deg 93% 7%)" }}
       >
-        <Container fluid className="text-black" style={{ fontSize: "11pt" }}>
-          Account: {account}
+        <Container style={{ fontSize: "11pt" }}>
+          <b>Active Account: </b>
+          {account}
         </Container>
       </Navbar>
     </>

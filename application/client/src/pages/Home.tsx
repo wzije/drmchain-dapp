@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PublicationCard from "./explores/Card";
+import PublicationCard from "./explores/ExploreCard";
 import Web3 from "web3";
 const publicationContract = require("../contracts/PublicationFactory.json");
 
@@ -27,6 +27,7 @@ const Home = () => {
   }, []);
 
   const displayPublications = () => {
+    console.info(publications);
     return publications.map((address, index) => {
       return (
         <div className="col-md-3 pl-1 m-0" key={address}>
@@ -38,7 +39,7 @@ const Home = () => {
 
   return (
     <div>
-      <h3>Explore Publication</h3>
+      <h3>Explore Books</h3>
       <hr />
       <div className="row">{displayPublications()}</div>
     </div>

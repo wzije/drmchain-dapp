@@ -1,18 +1,20 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "../Home";
 import Create from "../explores/Create";
+import ExploreDetail from "../explores/ExploreDetail";
 import NotFound from "../errors/Notfound";
-import Book from "../books";
-import BookDetail from "../books/Detail";
-import Detail from "../explores/Detail";
+import BookIndex from "../books/Bookindex";
+import BookDetail from "../books/BookDetail";
+import BookRequest from "../books/BookRequest";
 
 const Routers = () => (
   <Routes>
     <Route path="/" element={<Home />} />
     <Route path="explores" element={<Home />} />
-    <Route path="explores/:address" element={<Detail />} />
-    <Route path="mybooks" element={<Book />} />
+    <Route path="explores/:address" element={<ExploreDetail />} />
+    <Route path="mybooks" element={<BookIndex />} />
     <Route path="mybooks/:address" element={<BookDetail />} />
+    <Route path="myrequests" element={<BookRequest />} />
     <Route path="create" element={<Create />} />
     <Route path="*" element={<NotFound />} />
   </Routes>

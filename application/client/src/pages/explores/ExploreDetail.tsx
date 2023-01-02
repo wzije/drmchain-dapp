@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Table, Button } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import Web3 from "web3";
-import MyPublicationApproveDialog from "./ApproveDialog";
-import MyPublicationReadDialog from "./ReadDialog";
+import RequestDialog from "./DialogRequestOwner";
 const publicationContract = require("../../contracts/Publication.json");
 
-const dedicatedIPFSURL = "https://wzije.infura-ipfs.io/ipfs";
-
-const MyPublicationDetail = () => {
+const Detail = () => {
   let { address } = useParams();
   const [contract, setContract] = useState<any>();
   const [account, setAccount] = useState<any>();
   const [owner, setOwner] = useState<any>();
-  const [isOwner, setIsOwner] = useState<boolean>(false);
-  const [subscribers, setSubscribers] = useState<any[]>([]);
+  // const [isSubscribed, setIsSubscribed] = useState<any>();
+  const [isOwner, setIsOwner] = useState<any>();
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -23,7 +20,6 @@ const MyPublicationDetail = () => {
   const [isbn, setISBN] = useState("");
   const [cover, setCover] = useState("");
   const [description, setDescription] = useState("");
-  const [document, setDocument] = useState("");
 
   useEffect(() => {
     const init = async (address: any) => {
@@ -33,6 +29,9 @@ const MyPublicationDetail = () => {
         const contract = new web3.eth.Contract(abi, address);
         const accounts = await web3.eth.getAccounts();
         const owner = await contract.methods.owner().call();
+        // const isSubscribed = await contract.methods
+        //   .isSubscribed(accounts[0])
+        //   .call({ from: accounts[0] });
 
         const title = await contract.methods.title().call();
         const author = await contract.methods.author().call();
@@ -42,28 +41,10 @@ const MyPublicationDetail = () => {
         const cover = await contract.methods.cover().call();
         const description = await contract.methods.description().call();
 
-        if (accounts[0] === owner) {
-          const { subscribers, addresses } = await contract.methods
-            .getSubscribers()
-            .call({ from: owner });
-
-          const subscriberList: any[] = [];
-          for (let i = 0; i < subscribers.length; i++) {
-            subscriberList.push({
-              subscriber: subscribers[i],
-              address: addresses[i],
-            });
-          }
-          setSubscribers(subscriberList);
-          const document = await contract.methods
-            .getDocument()
-            .call({ from: owner });
-          setDocument(document);
-          setIsOwner(true);
-        }
-
         setContract(contract);
         setAccount(accounts[0]);
+        setIsOwner(accounts[0] === owner);
+        // setIsSubscribed(isSubscribed);
         setOwner(owner);
         setTitle(title);
         setAuthor(author);
@@ -81,34 +62,6 @@ const MyPublicationDetail = () => {
       init(address);
     }
   }, [address]);
-
-  const displaySubscribers = () => {
-    return subscribers.map((data: any, index: number) => {
-      return (
-        <tr key={index}>
-          <td>{index + 1}</td>
-          <td>{data.subscriber.date}</td>
-          <td>{data.address}</td>
-          <td>{data.subscriber.isShared ? "Shared" : "Awaiting"}</td>
-          <td>
-            {!data.subscriber.isShared ? (
-              <MyPublicationApproveDialog
-                owner={owner}
-                subscriberAddress={data.address}
-                subscriberKey={data.subscriber.key}
-                document={document}
-                contract={contract}
-              />
-            ) : (
-              <Button variant="danger" className="btn btn-sm">
-                Revoke
-              </Button>
-            )}
-          </td>
-        </tr>
-      );
-    });
-  };
 
   return (
     <>
@@ -153,49 +106,34 @@ const MyPublicationDetail = () => {
               </tr>
             </tbody>
           </Table>
-          {!isOwner ? (
-            <MyPublicationReadDialog
-              account={account}
-              contract={contract}
-              owner={owner}
-            />
-          ) : (
-            <Button
-              target="_blank"
-              onClick={() => {
-                window.open(`${dedicatedIPFSURL}/${document}`, "_blank");
-              }}
-              className="btn btn-sm btn-success"
-              style={{ padding: "5px 30px" }}
-            >
-              Read Book
-            </Button>
-          )}
-        </div>
-      </div>
-      {isOwner ? (
-        <div className="row mb-5">
-          <div className="col-md-12">
-            <h5 className="fw-bolder mb-3">Subscribers</h5>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Date</th>
-                  <th>Customer</th>
-                  <th>Shared</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>{displaySubscribers()}</tbody>
-            </Table>
+          <div>
+            {!isOwner ? (
+              <RequestDialog
+                title={title}
+                author={author}
+                publisher={publisher}
+                isbn={isbn}
+                releaseDate={releaseDate}
+                contract={contract}
+                account={account}
+                owner={owner}
+              />
+            ) : (
+              <button
+                className={`btn float-right btn-sm rounded-0 ${
+                  !isOwner ? "btn-warning" : "btn-secondary"
+                }`}
+                style={{ padding: "5px 30px" }}
+                disabled
+              >
+                {!isOwner ? "Subscribed" : "Read"}
+              </button>
+            )}
           </div>
         </div>
-      ) : (
-        <></>
-      )}
+      </div>
     </>
   );
 };
 
-export default MyPublicationDetail;
+export default Detail;

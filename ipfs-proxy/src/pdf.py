@@ -1,3 +1,4 @@
+import base64
 from io import BytesIO
 import os
 import qrcode
@@ -177,8 +178,12 @@ class PDF:
         # fetch file from ipfs
         fs = IPFS()
         response = fs.fetch(hash_file)
+        
+          #     save_path = os.path.join(self.tmpdir, f"response-encrypted-{uuid.uuid4()}.pdf")
+    #     with open(save_path, 'wb') as file:
+    #         file.write(response.content)
 
-        return response.text
+        return response.content
 
     def ___clearExistingFiles(self):
         for file_name in os.listdir(self.tmpdir):

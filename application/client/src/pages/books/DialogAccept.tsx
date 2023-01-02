@@ -1,96 +1,76 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-const EthCrypto = require("eth-crypto");
+import { Encrypt, Decrypt } from "../../utils/Security";
 
-const MyPublicationApproveDialog = (props: any) => {
+const AcceptDialog = (props: any) => {
   const [show, setShow] = useState(false);
-  const [secretKey, setSecretKey] = useState("");
+  const [privateKey, setPrivateKey] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSubmit = async () => {
-    const document = props.document;
+    // decrypt hashDocument
+    let hashFile = await Decrypt(props.documentHash, privateKey);
 
-    // hash document
-    const hashDocument = EthCrypto.hash.keccak256(
-      document + props.owner.slice(2) + props.subscriberAddress.slice(2)
-    );
+    // encrypt with customer public key and
+    let newHashDocument = await Encrypt(hashFile, props.customerPublicKey);
 
-    //create signature
-    const signature = EthCrypto.sign(secretKey, hashDocument);
-
-    const payload = {
-      document: document,
-      hashDocument: hashDocument,
-      signature,
-    };
-
-    const payloadString = JSON.stringify(payload);
-
-    //encrypt
-    const encrypted = await EthCrypto.encryptWithPublicKey(
-      props.subscriberKey,
-      payloadString
-    );
-
-    //encrypt to string
-    const encryptedString = EthCrypto.cipher.stringify(encrypted);
-
-    console.info(encryptedString);
+    console.info({ hashFile, newHashDocument }, "new hash");
 
     const tx = await props.contract.methods
-      .approveSubscription(props.subscriberAddress, encryptedString)
+      .acceptRequest(props.customerAccount, newHashDocument)
       .send({ from: props.owner });
 
     console.info(tx);
-    // window.location.reload();
+    window.location.reload();
   };
 
   return (
     <>
-      <Button className="btn btn-sm btn-warning" onClick={handleShow}>
-        Distribute
+      <Button className="btn btn-sm btn-warning p-2" onClick={handleShow}>
+        Accept Request
       </Button>
 
       <Modal
+        size="xl"
         show={show}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Approve Subscription</Modal.Title>
+          <Modal.Title>Accept Request Owner</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="formInputSecretKey">
-              <Form.Label>Your Secret Key</Form.Label>
+              <Form.Label>Your Private Key</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter your secret key"
                 onChange={(e) => {
-                  setSecretKey(e.target.value);
+                  setPrivateKey(e.target.value);
                 }}
               />
             </Form.Group>
             <hr />
-            <hr className="hr-text" data-content="Subscriber Attribute" />
+            <hr className="hr-text" data-content="Customer Attribute" />
             <Form.Group className="mb-3" controlId="formInputSecretKey">
-              <Form.Label>Account</Form.Label>
+              <Form.Label>Customer Account</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Account Address"
-                defaultValue={props.subscriberAddress}
+                defaultValue={props.customerAccount}
                 disabled
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formInputSecretKey">
-              <Form.Label>Public Key</Form.Label>
+              <Form.Label>Customer Public Key</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Public Key"
-                defaultValue={props.subscriberKey}
+                defaultValue={props.customerPublicKey}
                 disabled
               />
             </Form.Group>
@@ -109,4 +89,4 @@ const MyPublicationApproveDialog = (props: any) => {
   );
 };
 
-export default MyPublicationApproveDialog;
+export default AcceptDialog;

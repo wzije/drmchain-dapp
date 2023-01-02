@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Table } from "react-bootstrap";
+import React from "react";
+import { useEffect, useState } from "react";
+import { Card } from "react-bootstrap";
 import Web3 from "web3";
-import SubscribeDialog from "./SubscribeDialog";
+import SubscribeDialog from "./DialogRequestOwner";
+import "./css/Card.css";
+import { Link } from "react-router-dom";
+
 const publicationContract = require("../../contracts/Publication.json");
 
-const Detail = () => {
-  let { address } = useParams();
+const PublicationCard = (prop: any) => {
+  const publication = prop.data;
+
+  const [isOwner, setIsOwner] = useState(false);
+  // const [isSubscribed, setIsSubscribed] = useState(false);
+  const [account, setAccount] = useState("");
+  const [owner, setOwner] = useState("");
   const [contract, setContract] = useState<any>();
-  const [account, setAccount] = useState<any>();
-  const [owner, setOwner] = useState<any>();
-  const [isSubscribed, setIsSubscribed] = useState<any>();
-  const [isOwner, setIsOwner] = useState<any>();
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -28,24 +32,26 @@ const Detail = () => {
         const { abi } = publicationContract;
         const contract = new web3.eth.Contract(abi, address);
         const accounts = await web3.eth.getAccounts();
-        const owner = await contract.methods.owner().call();
-        const isSubscribed = await contract.methods
-          .isSubscribed(accounts[0])
-          .call({ from: accounts[0] });
+
+        // const isSubscribed = await contract.methods
+        //   .isSubscribed(accounts[0])
+        //   .call({ from: accounts[0] });
 
         const title = await contract.methods.title().call();
         const author = await contract.methods.author().call();
         const publisher = await contract.methods.publisher().call();
         const releaseDate = await contract.methods.releaseDate().call();
         const isbn = await contract.methods.isbn().call();
-        const cover = await contract.methods.cover().call();
         const description = await contract.methods.description().call();
+        const owner = await contract.methods.owner().call();
+        const cover = await contract.methods.cover().call();
 
         setContract(contract);
         setAccount(accounts[0]);
-        setIsOwner(accounts[0] === owner);
-        setIsSubscribed(isSubscribed);
         setOwner(owner);
+        if (owner === accounts[0]) setIsOwner(true);
+        // setIsSubscribed(isSubscribed);
+
         setTitle(title);
         setAuthor(author);
         setPublisher(publisher);
@@ -58,56 +64,27 @@ const Detail = () => {
       }
     };
 
-    if (address) {
-      init(address);
+    if (publication.address !== "") {
+      init(publication.address);
     }
-  }, [address]);
+  }, [publication.address]);
 
   return (
-    <>
-      <div className="row mb-5">
-        <header className="mb-4">
-          <h3 className="fw-bolder mb-1">{title}</h3>
-        </header>
-        <div className="col-md-3">
-          <img
-            className="img-fluid rounded"
-            src={`/img/${cover}`}
-            alt="..."
-            style={{ width: "200px" }}
-          />
-        </div>
-        <div className="col-md-9">
-          <Table striped>
-            <tbody>
-              <tr>
-                <th>Owner</th>
-                <th>{owner}</th>
-              </tr>
-              <tr>
-                <th>Author</th>
-                <th>{author}</th>
-              </tr>
-              <tr>
-                <th>Publisher</th>
-                <th>{publisher}</th>
-              </tr>
-              <tr>
-                <th>ISBN</th>
-                <th>{isbn}</th>
-              </tr>
-              <tr>
-                <th>Release Date</th>
-                <th>{releaseDate}</th>
-              </tr>
-              <tr>
-                <th>Summary</th>
-                <th>{description}</th>
-              </tr>
-            </tbody>
-          </Table>
-          <div>
-            {!isOwner && !isSubscribed ? (
+    <Card className="shadow">
+      <Card.Img variant="top" src={`/img/${cover}`} />
+      <Card.Body className="p-0 m-0 card-img-overlay">
+        <div className="p-2" style={{ background: "white", opacity: "0.9" }}>
+          <h4 className="card-title">{title}</h4>
+          <div className="meta card-text">{author}</div>
+          <div className="card-text">{description.slice(0, 70)}...</div>
+          <div className="mt-3 text-end">
+            <Link
+              to={`/explores/${publication.address}`}
+              className="btn btn-success float-right btn-sm rounded-0"
+            >
+              More
+            </Link>
+            {!isOwner ? (
               <SubscribeDialog
                 title={title}
                 author={author}
@@ -123,7 +100,6 @@ const Detail = () => {
                 className={`btn float-right btn-sm rounded-0 ${
                   !isOwner ? "btn-warning" : "btn-secondary"
                 }`}
-                style={{ padding: "5px 30px" }}
                 disabled
               >
                 {!isOwner ? "Subscribed" : "Yours"}
@@ -131,9 +107,9 @@ const Detail = () => {
             )}
           </div>
         </div>
-      </div>
-    </>
+      </Card.Body>
+    </Card>
   );
 };
 
-export default Detail;
+export default PublicationCard;

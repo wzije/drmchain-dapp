@@ -2,7 +2,54 @@ const EthCrypto = require("eth-crypto");
 
 const Security = async () => {};
 
-export const Encrypt = async (hashFile, ownerAccount, privateKey) => {
+export const Encrypt = async (hashFile, publicKey) => {
+  try {
+    //get publickey from private
+    // const publicKey = EthCrypto.publicKeyByPrivateKey(privateKey);
+
+    //create payload string
+    const payloadString = JSON.stringify({
+      hashFile: hashFile,
+      // signature,
+    });
+
+    //encrypt payload
+    const encrypted = await EthCrypto.encryptWithPublicKey(
+      publicKey,
+      payloadString
+    );
+
+    //encrypt to string
+    const encryptedDocument = EthCrypto.cipher.stringify(encrypted);
+
+    return encryptedDocument;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const Decrypt = async (hashDocument, privateKey) => {
+  try {
+    //parse hashDocument to object
+    const encryptedObject = EthCrypto.cipher.parse(hashDocument);
+
+    //decrypt hash document using private key
+    const decrypted = await EthCrypto.decryptWithPrivateKey(
+      privateKey,
+      encryptedObject
+    );
+
+    // decrypt payload stirng to json
+    const decryptedPayload = JSON.parse(decrypted);
+
+    return decryptedPayload.hashFile;
+  } catch (error) {
+    console.info(error);
+    return error;
+  }
+};
+
+export const EncryptSign = async (hashFile, ownerAccount, privateKey) => {
   try {
     //get publickey from private
     const publicKey = EthCrypto.publicKeyByPrivateKey(privateKey);
@@ -12,7 +59,7 @@ export const Encrypt = async (hashFile, ownerAccount, privateKey) => {
       hashFile + ownerAccount.slice(2)
     );
 
-    //create signature
+    // create signature
     const signature = EthCrypto.sign(privateKey, hashDocument);
 
     //create payload string
@@ -37,7 +84,7 @@ export const Encrypt = async (hashFile, ownerAccount, privateKey) => {
   }
 };
 
-export const Decrypt = async (hashDocument, ownerAccount, privateKey) => {
+export const DecryptSign = async (hashDocument, ownerAccount, privateKey) => {
   try {
     //parse hashDocument to object
     const encryptedObject = EthCrypto.cipher.parse(hashDocument);
@@ -60,7 +107,7 @@ export const Decrypt = async (hashDocument, ownerAccount, privateKey) => {
     );
 
     if (senderAccount !== ownerAccount) {
-      throw { code: 500, message: "Invalid signature" };
+      throw Object.assign(new Error("Invalid signature"), { code: 503 });
     }
 
     return decryptedPayload.hashFile;

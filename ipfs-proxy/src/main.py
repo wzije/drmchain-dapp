@@ -12,7 +12,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def hello_world():
     return "<p>File Proxy!</p>"
 
-
+@cross_origin()
 @app.route("/upload", methods=['POST'])
 def watermark():
     metadata = request.form['metadata']

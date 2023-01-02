@@ -1,24 +1,28 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Table } from "react-bootstrap";
+import { Alert } from "../../utils/AlertUtil";
 const EthCrypto = require("eth-crypto");
 
 const SubscribeDialog = (props: any) => {
   const [show, setShow] = useState(false);
-  const [secretKey, setSecretKey] = useState("");
+  const [secretKey, setPrivateKey] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSubmit = async () => {
     //publickey from secretkey
-    if (secretKey === "") return;
+    if (secretKey === "") {
+      Alert("private key is required");
+      return;
+    }
 
     const publicKey = EthCrypto.publicKeyByPrivateKey(secretKey);
 
     console.info(publicKey, "publickey request");
 
     const tx = await props.contract.methods
-      .subscribe(publicKey)
+      .requestOwner(publicKey)
       .send({ from: props.account });
 
     console.info(tx);
@@ -29,27 +33,28 @@ const SubscribeDialog = (props: any) => {
   return (
     <>
       <Button className="btn btn-sm btn-warning rounded-0" onClick={handleShow}>
-        Request A Copy
+        Request Owner
       </Button>
 
       <Modal
+        size="xl"
         show={show}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Request Copy</Modal.Title>
+          <Modal.Title>Request Owner</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="formInputSecretKey">
-              <Form.Label>Your Secret Key</Form.Label>
+            <Form.Group className="mb-3" controlId="formInputPrivateKey">
+              <Form.Label>Your Private Key</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter your secret key"
+                placeholder="Enter your private key"
                 onChange={(e) => {
-                  setSecretKey(e.target.value);
+                  setPrivateKey(e.target.value);
                 }}
               />
             </Form.Group>

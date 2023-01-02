@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import MyPublicationCard from "./Card";
+import BookCard from "./BookCard";
 import Web3 from "web3";
-const publicationContract = require("../../contracts/PublicationFactory.json");
+const factoryContract = require("../../contracts/PublicationFactory.json");
 
 const MyPublication = () => {
   const [publications, setPublications] = useState([]);
@@ -12,9 +12,9 @@ const MyPublication = () => {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
         const accounts = await web3.eth.getAccounts();
         const networkID = await web3.eth.net.getId();
-        const { abi } = publicationContract;
+        const { abi } = factoryContract;
 
-        let address = publicationContract.networks[networkID].address;
+        let address = factoryContract.networks[networkID].address;
         let contract = new web3.eth.Contract(abi, address);
 
         const publications = await contract.methods
@@ -34,7 +34,7 @@ const MyPublication = () => {
     return publications.map((address, index) => {
       return (
         <div className="col-md-3 pl-1 m-0" key={address}>
-          <MyPublicationCard data={{ address, index }} />
+          <BookCard data={{ address, index }} />
         </div>
       );
     });

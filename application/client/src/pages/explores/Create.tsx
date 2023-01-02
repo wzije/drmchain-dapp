@@ -9,7 +9,7 @@ import { faCloudUpload } from "@fortawesome/free-solid-svg-icons";
 import { Viewer, Worker, DocumentLoadEvent } from "@react-pdf-viewer/core";
 import axios from "axios";
 import moment from "moment";
-import { Encrypt, Decrypt } from "../../utils/Security";
+import { Encrypt } from "../../utils/Security";
 import {
   toolbarPlugin,
   ToolbarSlot,
@@ -136,7 +136,7 @@ const PublicationCreate = () => {
       .catch(console.error);
 
     // disini proses enkripsi
-    let encryptedHash = await Encrypt(hashFile, account, privateKey);
+    let encryptedHash = await Encrypt(hashFile, privateKey);
 
     // let encryptedHash =
     //   "81acca99266db649aa5dcdfdc428bbc8037bb5352c105dcc1d7c8d655e75dfb87a815253ce2c2a30c036314290661a0e8b2eccf46ef184d8c2629362f05f3578dc44a11cf14d87cc7462a5b99ceba07cf9d94418a90ca0687bd205c07c5f087a0826ba9833258f34bcb8463a0bd74ddaf1fa7c6f897db9293b622dd3c231b789bc782ba23705a4c0d22a85c5fec2e9bd835fe93f2df32113ec33d039f029f3b14569a18fb80cd029ca34c402840738071f3ff8a61ecf9b359eb5e57693682fa887c93924dc38b3505fd333c78d9c5ebeb4020afbd2331fdd03bba10ab41dfc290026e8c64a79258a4a663b1c01d3fc1a8e594f4e62ab3da6e10e5b74b470c0ee5f1888843ca927c4d97ffdb6620d7b2f000c7185f2946bcaa2ca9fa52c5c8845aac9e73fed824e33815ae0350b8b7b3150";
