@@ -1,13 +1,11 @@
-import { title } from "process";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
-import { Alert } from "../../utils/AlertUtil";
 
 const factoryContract = require("../../contracts/PublicationFactory.json");
 const publicationContract = require("../../contracts/Publication.json");
 
-const Request = () => {
+const BookRequest = () => {
   const [web3, setWeb3] = useState<any>();
   const [publications, setPublications] = useState<{}[]>([]);
 
@@ -93,4 +91,4 @@ const Request = () => {
   );
 };
 
-export default Request;
+export default BookRequest;
