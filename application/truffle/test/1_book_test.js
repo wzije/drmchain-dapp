@@ -1,8 +1,8 @@
 // const Converter = require("../scripts/converter");
-const PublicationContract = artifacts.require("Publication");
+const BookContract = artifacts.require("Book");
 
-contract("Publication", (accounts) => {
-  let publication;
+contract("Book", (accounts) => {
+  let book;
   title = "Smart Contract Development with Solidity & Ethereum";
   author = "Kevin Solorio, Randall Kanna & David H. Hoover";
   authorAccount = accounts[0];
@@ -16,7 +16,7 @@ contract("Publication", (accounts) => {
 
   describe("Publish A Book", () => {
     beforeEach(async () => {
-      publication = await PublicationContract.new(
+      book = await BookContract.new(
         title,
         author,
         authorAccount,
@@ -30,43 +30,43 @@ contract("Publication", (accounts) => {
       );
     });
 
-    it("should OK, get publication title", async () => {
-      const actualTitle = await publication.title();
+    it("should OK, get book title", async () => {
+      const actualTitle = await book.title();
       assert.equal(actualTitle, title, "title matched");
     });
 
-    it("should OK, get publication author", async () => {
-      const actual = await publication.author();
+    it("should OK, get book author", async () => {
+      const actual = await book.author();
       assert.equal(actual, author, "author matched");
     });
 
-    it("should OK, get publication publisher", async () => {
-      const actual = await publication.publisher();
+    it("should OK, get book publisher", async () => {
+      const actual = await book.publisher();
       assert.equal(actual, publisher, "publisher matched");
     });
 
-    it("should OK, get publication releaseDate", async () => {
-      const actual = await publication.releaseDate();
+    it("should OK, get book releaseDate", async () => {
+      const actual = await book.releaseDate();
       assert.equal(actual, releaseDate, "releaseDate matched");
     });
 
-    it("should OK, get publication isbn", async () => {
-      const actual = await publication.isbn();
+    it("should OK, get book isbn", async () => {
+      const actual = await book.isbn();
       assert.equal(actual, isbn, "isbn matched");
     });
 
-    it("should OK, get publication documentHash", async () => {
-      const actual = await publication.getDocument({ from: owner });
+    it("should OK, get book documentHash", async () => {
+      const actual = await book.getDocument({ from: owner });
       assert.equal(actual, documentHash, "documentHash matched");
     });
 
-    it("should OK, get the owner of publication", async () => {
-      const actual = await publication.owner();
+    it("should OK, get the owner of book", async () => {
+      const actual = await book.owner();
       assert.equal(actual, authorAccount, "the owner match with address");
     });
 
     it("the owner should not account 1", async () => {
-      const actual = await publication.owner();
+      const actual = await book.owner();
       const guestAddress = accounts[1];
       assert.notEqual(actual, guestAddress, "the owner not matched");
     });
@@ -80,7 +80,7 @@ contract("Publication", (accounts) => {
     const newHashDocument = documentHash + customerPublicKey;
 
     before(async () => {
-      publication = await PublicationContract.new(
+      book = await BookContract.new(
         title,
         author,
         authorAccount,
@@ -96,7 +96,7 @@ contract("Publication", (accounts) => {
 
     it("Should error, get the empty request", async () => {
       try {
-        await publication.getRequest({
+        await book.getRequest({
           from: owner,
         });
         assert.fail("The transaction should have thrown an error");
@@ -111,7 +111,7 @@ contract("Publication", (accounts) => {
     });
 
     it("Should return event Requested", async () => {
-      const tx = await publication.requestOwner(customerPublicKey, {
+      const tx = await book.requestOwner(customerPublicKey, {
         from: customer,
       });
 
@@ -127,7 +127,7 @@ contract("Publication", (accounts) => {
 
     it("Should rejected, the Owner can't make the request", async () => {
       try {
-        await publication.requestOwner(customerPublicKey, { from: owner });
+        await book.requestOwner(customerPublicKey, { from: owner });
         assert.fail("The transaction should have thrown an error");
       } catch (error) {
         const expectedMessage = "the owner not allowed";
@@ -141,7 +141,7 @@ contract("Publication", (accounts) => {
 
     it("Should rejected, customer was requested", async () => {
       try {
-        await publication.requestOwner(customerPublicKey, {
+        await book.requestOwner(customerPublicKey, {
           from: customer,
         });
         assert.fail("The transaction should have thrown an error");
@@ -155,14 +155,14 @@ contract("Publication", (accounts) => {
       }
     });
 
-    it("Should rejected, the publication has been booked by someone", async () => {
+    it("Should rejected, the book has been booked by someone", async () => {
       try {
-        await publication.requestOwner(customerPublicKey, {
+        await book.requestOwner(customerPublicKey, {
           from: customer_2,
         });
         assert.fail("The transaction should have thrown an error");
       } catch (error) {
-        const expectedMessage = "the publication requested";
+        const expectedMessage = "the book requested";
         assert.include(
           error.message,
           expectedMessage,
@@ -172,23 +172,25 @@ contract("Publication", (accounts) => {
     });
 
     it("Should return hash and customer address, get request", async () => {
-      const tx = await publication.getRequest({
+      const tx = await book.getRequest({
         from: owner,
       });
 
       const customerAddr = tx[0],
-        pubKey = tx[1];
+        pubKey = tx[1],
+        docHash = tx[2];
 
       assert.equal(
         customerAddr,
         customer,
         "address response should match with cutomer address"
       );
+      assert.equal(docHash, documentHash, "document hash should equal");
       assert.isNotNull(pubKey, "publicKey response should exist");
     });
 
     it("Should OK, accept request", async () => {
-      const tx = await publication.acceptRequest(customer, newHashDocument, {
+      const tx = await book.acceptRequest(newHashDocument, {
         from: owner,
       });
 
@@ -203,18 +205,18 @@ contract("Publication", (accounts) => {
     });
 
     it("Should be OK, the customer should be new owner", async () => {
-      const newOwner = await publication.owner();
+      const newOwner = await book.owner();
       assert.equal(newOwner, customer, "the customer should be owner");
     });
 
     it("Should be OK, the new owner (customer) can access document", async () => {
-      const actual = await publication.getDocument({ from: customer });
+      const actual = await book.getDocument({ from: customer });
       assert.equal(actual, newHashDocument, "documentHash matched");
     });
 
     it("Should rejected, the old owner can't access document", async () => {
       try {
-        await publication.getDocument({ from: owner });
+        await book.getDocument({ from: owner });
         assert.fail("The transaction should have thrown an error");
       } catch (error) {
         const expectedMessage = "the guest not allowed";
@@ -228,7 +230,7 @@ contract("Publication", (accounts) => {
 
     it("Should rejected, the request should emty after accepted", async () => {
       try {
-        await publication.getRequest({ from: customer });
+        await book.getRequest({ from: customer });
         assert.fail("The transaction should have thrown an error");
       } catch (error) {
         const expectedMessage = "the request is not available";

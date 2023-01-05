@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import BookCard from "./BookCard";
 import Web3 from "web3";
-const factoryContract = require("../../contracts/PublicationFactory.json");
+const bookFactoryContract = require("../../contracts/BookFactory.json");
 
-const MyPublication = () => {
-  const [publications, setPublications] = useState([]);
+const BookIndex = () => {
+  const [books, setBooks] = useState([]);
 
   useEffect(() => {
     const init = async () => {
@@ -12,16 +12,16 @@ const MyPublication = () => {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
         const accounts = await web3.eth.getAccounts();
         const networkID = await web3.eth.net.getId();
-        const { abi } = factoryContract;
+        const { abi } = bookFactoryContract;
 
-        let address = factoryContract.networks[networkID].address;
+        let address = bookFactoryContract.networks[networkID].address;
         let contract = new web3.eth.Contract(abi, address);
 
-        const publications = await contract.methods
-          .myPublications()
+        const books = await contract.methods
+          .myBooks()
           .call({ from: accounts[0] });
 
-        setPublications(publications);
+        setBooks(books);
       } catch (err) {
         console.log(err);
       }
@@ -30,10 +30,10 @@ const MyPublication = () => {
     init();
   }, []);
 
-  const displayPublications = () => {
-    return publications.map((address, index) => {
+  const displayBooks = () => {
+    return books.map((address, index) => {
       return (
-        <div className="col-md-3 pl-1 m-0" key={address}>
+        <div className="col-md-3 pl-1 m-0 mb-3" key={address}>
           <BookCard data={{ address, index }} />
         </div>
       );
@@ -42,11 +42,11 @@ const MyPublication = () => {
 
   return (
     <>
-      <h4>My Publications</h4>
+      <h4>My Books</h4>
       <hr />
-      <div className="row">{displayPublications()}</div>
+      <div className="row">{displayBooks()}</div>
     </>
   );
 };
 
-export default MyPublication;
+export default BookIndex;

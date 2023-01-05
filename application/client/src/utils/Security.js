@@ -2,6 +2,10 @@ const EthCrypto = require("eth-crypto");
 
 const Security = async () => {};
 
+export const GetPublicKey = (privateKey) => {
+  return EthCrypto.publicKeyByPrivateKey(privateKey);
+};
+
 export const Encrypt = async (hashFile, publicKey) => {
   try {
     //get publickey from private
@@ -24,7 +28,8 @@ export const Encrypt = async (hashFile, publicKey) => {
 
     return encryptedDocument;
   } catch (error) {
-    return error;
+    console.info(error);
+    return;
   }
 };
 
@@ -45,7 +50,7 @@ export const Decrypt = async (hashDocument, privateKey) => {
     return decryptedPayload.hashFile;
   } catch (error) {
     console.info(error);
-    return error;
+    return;
   }
 };
 
@@ -80,7 +85,7 @@ export const EncryptSign = async (hashFile, ownerAccount, privateKey) => {
     return encryptedDocument;
   } catch (error) {
     console.info(error);
-    return error;
+    return;
   }
 };
 
@@ -113,7 +118,7 @@ export const DecryptSign = async (hashDocument, ownerAccount, privateKey) => {
     return decryptedPayload.hashFile;
   } catch (error) {
     console.info(error);
-    return error;
+    return;
   }
 };
 

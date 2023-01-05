@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import Web3 from "web3";
-import "./css/MyPublicationCard.css";
+import "./css/MyBookCard.css";
 
-const publicationContract = require("../../contracts/Publication.json");
+const bookContract = require("../../contracts/Book.json");
 
-const MyPublicationCard = (prop: any) => {
-  const publication = prop.data;
+const MyBookCard = (prop: any) => {
+  const book = prop.data;
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -19,7 +19,7 @@ const MyPublicationCard = (prop: any) => {
     const init = async (address: any) => {
       try {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
-        const { abi } = publicationContract;
+        const { abi } = bookContract;
         const contract = new web3.eth.Contract(abi, address);
         const title = await contract.methods.title().call();
         const author = await contract.methods.author().call();
@@ -35,10 +35,10 @@ const MyPublicationCard = (prop: any) => {
       }
     };
 
-    if (publication.address) {
-      init(publication.address);
+    if (book.address) {
+      init(book.address);
     }
-  }, [publication.address]);
+  }, [book.address]);
 
   return (
     <Card className="shadow">
@@ -50,7 +50,7 @@ const MyPublicationCard = (prop: any) => {
           <div className="card-text">{description.slice(0, 70)}...</div>
           <div className="mt-3 text-end">
             <Link
-              to={`/me/books/${publication.address}`}
+              to={`/mybooks/${book.address}`}
               className="btn btn-success float-right btn-sm rounded-0"
             >
               More
@@ -62,4 +62,4 @@ const MyPublicationCard = (prop: any) => {
   );
 };
 
-export default MyPublicationCard;
+export default MyBookCard;

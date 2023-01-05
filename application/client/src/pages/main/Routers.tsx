@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "../Home";
-import Create from "../explores/Create";
+import Create from "../books/BookCreate";
 import ExploreDetail from "../explores/ExploreDetail";
 import NotFound from "../errors/Notfound";
 import BookIndex from "../books/Bookindex";

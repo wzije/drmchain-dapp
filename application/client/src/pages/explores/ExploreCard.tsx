@@ -6,10 +6,10 @@ import SubscribeDialog from "./DialogRequestOwner";
 import "./css/Card.css";
 import { Link } from "react-router-dom";
 
-const publicationContract = require("../../contracts/Publication.json");
+const BookContract = require("../../contracts/Book.json");
 
-const PublicationCard = (prop: any) => {
-  const publication = prop.data;
+const BookCard = (prop: any) => {
+  const book = prop.data;
 
   const [isOwner, setIsOwner] = useState(false);
   // const [isSubscribed, setIsSubscribed] = useState(false);
@@ -29,13 +29,9 @@ const PublicationCard = (prop: any) => {
     const init = async (address: any) => {
       try {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
-        const { abi } = publicationContract;
+        const { abi } = BookContract;
         const contract = new web3.eth.Contract(abi, address);
         const accounts = await web3.eth.getAccounts();
-
-        // const isSubscribed = await contract.methods
-        //   .isSubscribed(accounts[0])
-        //   .call({ from: accounts[0] });
 
         const title = await contract.methods.title().call();
         const author = await contract.methods.author().call();
@@ -64,10 +60,10 @@ const PublicationCard = (prop: any) => {
       }
     };
 
-    if (publication.address !== "") {
-      init(publication.address);
+    if (book.address !== "") {
+      init(book.address);
     }
-  }, [publication.address]);
+  }, [book.address]);
 
   return (
     <Card className="shadow">
@@ -79,7 +75,7 @@ const PublicationCard = (prop: any) => {
           <div className="card-text">{description.slice(0, 70)}...</div>
           <div className="mt-3 text-end">
             <Link
-              to={`/explores/${publication.address}`}
+              to={`/explores/${book.address}`}
               className="btn btn-success float-right btn-sm rounded-0"
             >
               More
@@ -112,4 +108,4 @@ const PublicationCard = (prop: any) => {
   );
 };
 
-export default PublicationCard;
+export default BookCard;

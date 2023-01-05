@@ -4,7 +4,7 @@ pragma solidity >=0.8.0 <0.9.0;
 // import "./Signature.sol";
 import "./Ownable.sol";
 
-contract Publication is Ownable {
+contract Book is Ownable {
     string public title;
     string public author;
     address public author_account;
@@ -60,10 +60,7 @@ contract Publication is Ownable {
 
     function requestOwner(string memory _customerPublicKey) external nonOwner {
         require(_requestOwner.customer != msg.sender, "you requested");
-        require(
-            _requestOwner.customer == address(0x0),
-            "the publication requested"
-        );
+        require(_requestOwner.customer == address(0x0), "the book requested");
 
         _requestOwner.customer = msg.sender;
         _requestOwner.publicKey = _customerPublicKey;
@@ -77,33 +74,34 @@ contract Publication is Ownable {
         external
         view
         onlyOwner
-        returns (address, string memory)
+        returns (
+            address,
+            string memory,
+            string memory
+        )
     {
         require(
             _requestOwner.customer != address(0x0),
             "the request is not available"
         );
-        return (_requestOwner.customer, _requestOwner.publicKey);
+        return (_requestOwner.customer, _requestOwner.publicKey, documentHash);
     }
 
-    function isMyRequest(address customer) public view returns (bool) {
+    function isMyRequest(address customer) public view nonOwner returns (bool) {
         return _requestOwner.customer == customer;
     }
 
-    function acceptRequest(address _customer, string memory _hashDocument)
-        external
-        onlyOwner
-    {
+    function acceptRequest(string memory _hashDocument) external onlyOwner {
         require(
             _requestOwner.customer != address(0x0),
             "the request is not available"
         );
 
         documentHash = _hashDocument;
-        _transferOwnership(_customer);
+        _transferOwnership(_requestOwner.customer);
+
+        emit RequestAccepted(_requestOwner.customer, title, block.timestamp);
 
         delete _requestOwner;
-
-        emit RequestAccepted(_customer, title, block.timestamp);
     }
 }

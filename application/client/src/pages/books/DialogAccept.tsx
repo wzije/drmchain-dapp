@@ -11,15 +11,15 @@ const AcceptDialog = (props: any) => {
 
   const handleSubmit = async () => {
     // decrypt hashDocument
-    let hashFile = await Decrypt(props.documentHash, privateKey);
+    let hashFile = await Decrypt(props.requestData.documentHash, privateKey);
 
     // encrypt with customer public key and
-    let newHashDocument = await Encrypt(hashFile, props.customerPublicKey);
+    let newHashDocument = await Encrypt(hashFile, props.requestData.publicKey);
 
-    console.info({ hashFile, newHashDocument }, "new hash");
+    // console.info({ hashFile, newHashDocument }, "new hash");
 
     const tx = await props.contract.methods
-      .acceptRequest(props.customerAccount, newHashDocument)
+      .acceptRequest(newHashDocument)
       .send({ from: props.owner });
 
     console.info(tx);

@@ -7,18 +7,18 @@ import ReadDialog from "./DialogReadConfirm";
 import { Alert } from "../../utils/AlertUtil";
 import PDFViewer from "./PDFVIewer";
 
-const publicationContract = require("../../contracts/Publication.json");
+const bookContract = require("../../contracts/Book.json");
 
 const BookDetail = () => {
   let { address } = useParams();
   const [contract, setContract] = useState<any>();
-  const [account, setAccount] = useState<any>();
   const [owner, setOwner] = useState<any>();
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [request, setRequest] = useState<{
     account: String;
     publicKey: string;
-  }>({ account: "", publicKey: "" });
+    documentHash: string;
+  }>({ account: "", publicKey: "", documentHash: "" });
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -27,14 +27,13 @@ const BookDetail = () => {
   const [isbn, setISBN] = useState("");
   const [cover, setCover] = useState("");
   const [description, setDescription] = useState("");
-  const [document, setDocument] = useState("");
   const [documentFile, setDocumentFile] = useState("");
 
   useEffect(() => {
     const init = async (address: any) => {
       try {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
-        const { abi } = publicationContract;
+        const { abi } = bookContract;
         const contract = new web3.eth.Contract(abi, address);
         const accounts = await web3.eth.getAccounts();
         const owner = await contract.methods.owner().call();
@@ -46,26 +45,19 @@ const BookDetail = () => {
 
         const title = await contract.methods.title().call();
         const author = await contract.methods.author().call();
-        // const authorAccount = await contract.methods.authorAccount().call();
         const publisher = await contract.methods.publisher().call();
         const releaseDate = await contract.methods.releaseDate().call();
         const isbn = await contract.methods.isbn().call();
         const cover = await contract.methods.cover().call();
         const description = await contract.methods.description().call();
 
-        if (accounts[0] === owner) {
-          const document = await contract.methods
-            .getDocument()
-            .call({ from: owner });
+        if (accounts[0] === owner) setIsOwner(true);
 
-          setDocument(document);
-          setIsOwner(true);
-        }
-
+        // master
         setContract(contract);
-        setAccount(accounts[0]);
         setOwner(owner);
 
+        // publication
         setTitle(title);
         setAuthor(author);
         setPublisher(publisher);
@@ -74,22 +66,26 @@ const BookDetail = () => {
         setCover(cover);
         setDescription(description);
 
+        const hashDocument = await contract.methods
+          .getDocument()
+          .call({ from: owner });
+
+        console.info(hashDocument, "cuuuk");
+
         if (accounts[0] === owner) {
           await contract.methods
             .getRequest()
             .call({ from: owner })
             .then((resp: any) => {
-              console.info(resp);
               setRequest({
                 account: resp[0],
                 publicKey: resp[1],
+                documentHash: resp[2],
               });
             })
             .catch((error: any) => {
               console.log(error);
             });
-
-          console.info(request, "request");
         }
       } catch (err) {
         console.log(err);
@@ -101,11 +97,9 @@ const BookDetail = () => {
 
   const handleRead = (fileURL: string) => {
     setDocumentFile(fileURL);
-    console.info(fileURL, "blabateuhtehuteoalea");
   };
 
   const displayDocument = (): any => {
-    console.info("run display");
     if (documentFile !== undefined && documentFile !== "") {
       return <PDFViewer documentFile={documentFile}></PDFViewer>;
     }
@@ -164,9 +158,7 @@ const BookDetail = () => {
                       <br />
                       <AcceptDialog
                         owner={owner}
-                        customerAccount={request.account}
-                        customerPublicKey={request.publicKey}
-                        documentHash={document}
+                        requestData={request}
                         contract={contract}
                       />
                     </>
@@ -180,7 +172,6 @@ const BookDetail = () => {
           {isOwner ? (
             <ReadDialog
               onSetDocumentFile={handleRead}
-              account={account}
               contract={contract}
               owner={owner}
             />

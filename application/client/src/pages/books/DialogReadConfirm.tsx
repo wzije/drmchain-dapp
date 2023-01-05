@@ -3,7 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { Alert } from "../../utils/AlertUtil";
 import { Decrypt } from "../../utils/Security";
 import axios from "axios";
-const ipfsProxyEndPoint = "http://127.0.0.1:8080";
+const fileProxyEndPoint = "http://127.0.0.1:8080";
 
 const ReadDialog = (props: any) => {
   const [show, setShow] = useState(false);
@@ -23,13 +23,27 @@ const ReadDialog = (props: any) => {
     //memanggil data dari BC
     const hashDocument = await props.contract.methods
       .getDocument()
-      .call({ from: props.account });
+      .call({ from: props.owner });
+
+    console.info(
+      hashDocument,
+      "hash",
+      props.owner,
+      "owner",
+      props.contract,
+      "c"
+    );
+
+    if (!hashDocument) {
+      Alert("Load document failed.");
+      return;
+    }
 
     const hashFile = await Decrypt(hashDocument, privateKey);
 
     await axios({
       method: "post",
-      url: `${ipfsProxyEndPoint}/get`,
+      url: `${fileProxyEndPoint}/get`,
       data: { hash: hashFile.hash },
       responseType: "arraybuffer",
       headers: {
@@ -63,7 +77,7 @@ const ReadDialog = (props: any) => {
           keyboard={false}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Approve Subscription</Modal.Title>
+            <Modal.Title>Reading Confirmation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group className="mb-3" controlId="formInputprivateKey">
@@ -79,7 +93,7 @@ const ReadDialog = (props: any) => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="success" className="btn" onClick={handleVerify}>
-              Verify & Load
+              Confirm
             </Button>
             <Button variant="secondary" onClick={handleClose}>
               Close

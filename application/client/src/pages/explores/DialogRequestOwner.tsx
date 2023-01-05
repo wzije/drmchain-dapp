@@ -1,33 +1,37 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Table } from "react-bootstrap";
 import { Alert } from "../../utils/AlertUtil";
-const EthCrypto = require("eth-crypto");
+import { GetPublicKey } from "../../utils/Security";
 
 const SubscribeDialog = (props: any) => {
   const [show, setShow] = useState(false);
-  const [secretKey, setPrivateKey] = useState("");
+  const [privateKey, setPrivateKey] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSubmit = async () => {
     //publickey from secretkey
-    if (secretKey === "") {
+    if (privateKey === "") {
       Alert("private key is required");
       return;
     }
 
-    const publicKey = EthCrypto.publicKeyByPrivateKey(secretKey);
+    try {
+      console.info(props.account, "jojo");
+      const publicKey = GetPublicKey(privateKey);
 
-    console.info(publicKey, "publickey request");
+      const rest = await props.contract.methods
+        .requestOwner(publicKey)
+        .send({ from: props.account });
 
-    const tx = await props.contract.methods
-      .requestOwner(publicKey)
-      .send({ from: props.account });
+      console.info(rest);
+    } catch (error: any) {
+      console.info(error);
+      return;
+    }
 
-    console.info(tx);
-
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (
