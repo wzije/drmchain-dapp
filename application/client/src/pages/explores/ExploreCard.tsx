@@ -12,7 +12,7 @@ const BookCard = (prop: any) => {
   const book = prop.data;
 
   const [isOwner, setIsOwner] = useState(false);
-  // const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isRequested, setIsRequested] = useState(false);
   const [account, setAccount] = useState("");
   const [owner, setOwner] = useState("");
   const [contract, setContract] = useState<any>();
@@ -46,8 +46,14 @@ const BookCard = (prop: any) => {
         setAccount(accounts[0]);
         setOwner(owner);
         if (owner === accounts[0]) setIsOwner(true);
-        // setIsSubscribed(isSubscribed);
 
+        const isRequested = await contract.methods
+          .isMyRequest(accounts[0])
+          .call({ from: accounts[0] });
+
+        console.info(isRequested, "req");
+
+        setIsRequested(isRequested);
         setTitle(title);
         setAuthor(author);
         setPublisher(publisher);
@@ -81,24 +87,31 @@ const BookCard = (prop: any) => {
               More
             </Link>
             {!isOwner ? (
-              <SubscribeDialog
-                title={title}
-                author={author}
-                publisher={publisher}
-                isbn={isbn}
-                releaseDate={releaseDate}
-                contract={contract}
-                account={account}
-                owner={owner}
-              />
+              !isRequested ? (
+                <SubscribeDialog
+                  title={title}
+                  author={author}
+                  publisher={publisher}
+                  isbn={isbn}
+                  releaseDate={releaseDate}
+                  contract={contract}
+                  account={account}
+                  owner={owner}
+                />
+              ) : (
+                <button
+                  className={`btn float-right btn-sm rounded-0 btn-warning`}
+                  disabled
+                >
+                  Requested
+                </button>
+              )
             ) : (
               <button
-                className={`btn float-right btn-sm rounded-0 ${
-                  !isOwner ? "btn-warning" : "btn-secondary"
-                }`}
+                className={`btn float-right btn-sm rounded-0 btn-secondary`}
                 disabled
               >
-                {!isOwner ? "Subscribed" : "Yours"}
+                Yours
               </button>
             )}
           </div>
