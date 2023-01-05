@@ -93,4 +93,25 @@ contract BookFactory {
 
         return collections;
     }
+
+    function myRequestedBooks()
+        external
+        view
+        returns (Book[] memory collections)
+    {
+        uint256 size = 0;
+        for (uint256 i = 0; i < _books.length; i++) {
+            Book pub = _books[i];
+            if (pub.owner() == msg.sender && pub.isRequested()) size++;
+        }
+
+        collections = new Book[](size);
+        for (uint256 i = 0; i < _books.length; i++) {
+            Book pub = _books[i];
+            if (pub.owner() == msg.sender && pub.isRequested())
+                collections[i] = pub;
+        }
+
+        return collections;
+    }
 }

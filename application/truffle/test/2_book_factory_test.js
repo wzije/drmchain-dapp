@@ -173,6 +173,31 @@ contract("Book Factory: books", (accounts) => {
       }
     });
 
+    it("get my requested, should return is mine", async () => {
+      try {
+        let newOwner = accounts[8];
+        const factory = await createBookFactory(5, newOwner);
+        const myBooks = await factory.myBooks({ from: newOwner });
+
+        const book1 = await BookContract.at(myBooks[0]);
+        const book2 = await BookContract.at(myBooks[1]);
+
+        // my request as customer perspective
+        let customer = accounts[9];
+        await book1.requestOwner("0x99", { from: customer });
+        await book2.requestOwner("0x99", { from: customer });
+        console.info("lisa");
+
+        const myRequestedList = await factory.myRequestedBooks({
+          from: newOwner,
+        });
+
+        assert.equal(myRequestedList.length, 2, "count request should two");
+      } catch (err) {
+        assert.fail("get my requested data failed");
+      }
+    });
+
     it("get my request, should return is mine", async () => {
       try {
         let newOwner = accounts[1];
@@ -193,7 +218,7 @@ contract("Book Factory: books", (accounts) => {
 
         assert.equal(bookTitle, myRequestTitle, "should equal");
       } catch (err) {
-        assert.fail("limit and offset exceeded bounds");
+        assert.fail("get my request wrong");
       }
     });
   });

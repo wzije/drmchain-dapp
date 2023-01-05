@@ -91,6 +91,10 @@ contract Book is Ownable {
         return _requestOwner.customer == customer;
     }
 
+    function isRequested() public view returns (bool) {
+        return _requestOwner.customer != address(0x00);
+    }
+
     function acceptRequest(string memory _hashDocument) external onlyOwner {
         require(
             _requestOwner.customer != address(0x0),
