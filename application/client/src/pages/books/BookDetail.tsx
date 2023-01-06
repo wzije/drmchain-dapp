@@ -183,7 +183,7 @@ const BookDetail = () => {
           )}
         </div>
       </div>
-      <div className="document-viewer">{displayDocument()}</div>
+      <div className="document-viewer mb-5">{displayDocument()}</div>
     </>
   );
 };

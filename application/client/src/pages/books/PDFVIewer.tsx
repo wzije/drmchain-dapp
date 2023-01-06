@@ -5,6 +5,7 @@ import {
   ToolbarSlot,
   TransformToolbarSlot,
 } from "@react-pdf-viewer/toolbar";
+import "./css/PDFViewer.css";
 const workerUrl = require("pdfjs-dist/build/pdf.worker.entry");
 
 const PDFViewer = (props: any) => {
@@ -23,13 +24,13 @@ const PDFViewer = (props: any) => {
     <Worker workerUrl={workerUrl}>
       <div
         className="shadow"
-        style={{ height: "600px", background: "#f4f4f4" }}
+        style={{ height: "700px", background: "#f4f4f4" }}
       >
         <>
           <Toolbar>{renderDefaultToolbar(transform)}</Toolbar>
           <Viewer
             fileUrl={`${props.documentFile}`}
-            theme="light"
+            theme="dark"
             plugins={[toolbarPluginInstance]}
           />
         </>
