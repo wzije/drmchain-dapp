@@ -7,7 +7,7 @@ import "./css/MyBookCard.css";
 
 const bookContract = require("../../contracts/Book.json");
 
-const MyBookCard = (prop: any) => {
+const BookCard = (prop: any) => {
   const book = prop.data;
 
   const [title, setTitle] = useState("");
@@ -62,4 +62,4 @@ const MyBookCard = (prop: any) => {
   );
 };
 
-export default MyBookCard;
+export default BookCard;

@@ -69,10 +69,16 @@ contract BookFactory {
             if (pub.owner() == msg.sender) size++;
         }
 
-        collections = new Book[](size);
-        for (uint256 i = 0; i < _books.length; i++) {
-            Book pub = _books[i];
-            if (pub.owner() == msg.sender) collections[i] = pub;
+        if (size > 0) {
+            collections = new Book[](size);
+            uint256 collectIndex = 0;
+            for (uint256 i = 0; i < _books.length; i++) {
+                Book pub = _books[i];
+                if (pub.owner() == msg.sender) {
+                    collections[collectIndex] = pub;
+                    collectIndex++;
+                }
+            }
         }
 
         return collections;
@@ -85,10 +91,16 @@ contract BookFactory {
             if (pub.isMyRequest(msg.sender)) size++;
         }
 
-        collections = new Book[](size);
-        for (uint256 i = 0; i < _books.length; i++) {
-            Book pub = _books[i];
-            if (pub.isMyRequest(msg.sender)) collections[i] = pub;
+        if (size > 0) {
+            uint256 collectIndex = 0;
+            collections = new Book[](size);
+            for (uint256 i = 0; i < _books.length; i++) {
+                Book pub = _books[i];
+                if (pub.isMyRequest(msg.sender)) {
+                    collections[collectIndex] = pub;
+                    collectIndex++;
+                }
+            }
         }
 
         return collections;
@@ -105,11 +117,16 @@ contract BookFactory {
             if (pub.owner() == msg.sender && pub.isRequested()) size++;
         }
 
-        collections = new Book[](size);
-        for (uint256 i = 0; i < _books.length; i++) {
-            Book pub = _books[i];
-            if (pub.owner() == msg.sender && pub.isRequested())
-                collections[i] = pub;
+        if (size > 0) {
+            uint256 collectIndex = 0;
+            collections = new Book[](size);
+            for (uint256 i = 0; i < _books.length; i++) {
+                Book pub = _books[i];
+                if (pub.owner() == msg.sender && pub.isRequested()) {
+                    collections[collectIndex] = pub;
+                    collectIndex++;
+                }
+            }
         }
 
         return collections;

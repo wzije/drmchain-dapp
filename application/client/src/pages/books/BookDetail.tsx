@@ -66,12 +66,6 @@ const BookDetail = () => {
         setCover(cover);
         setDescription(description);
 
-        const hashDocument = await contract.methods
-          .getDocument()
-          .call({ from: owner });
-
-        console.info(hashDocument, "cuuuk");
-
         if (accounts[0] === owner) {
           await contract.methods
             .getRequest()

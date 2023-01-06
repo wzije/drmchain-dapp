@@ -87,7 +87,7 @@ contract Book is Ownable {
         return (_requestOwner.customer, _requestOwner.publicKey, documentHash);
     }
 
-    function isMyRequest(address customer) public view nonOwner returns (bool) {
+    function isMyRequest(address customer) public view returns (bool) {
         return _requestOwner.customer == customer;
     }
 

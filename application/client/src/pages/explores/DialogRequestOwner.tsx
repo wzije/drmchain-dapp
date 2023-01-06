@@ -18,7 +18,6 @@ const SubscribeDialog = (props: any) => {
     }
 
     try {
-      console.info(props.account, "jojo");
       const publicKey = GetPublicKey(privateKey);
 
       const rest = await props.contract.methods
@@ -26,6 +25,8 @@ const SubscribeDialog = (props: any) => {
         .send({ from: props.account });
 
       console.info(rest);
+
+      window.location.href = "/myrequests";
     } catch (error: any) {
       console.info(error);
       return;

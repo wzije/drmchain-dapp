@@ -10,8 +10,8 @@ const Detail = () => {
   const [contract, setContract] = useState<any>();
   const [account, setAccount] = useState<any>();
   const [owner, setOwner] = useState<any>();
-  // const [isSubscribed, setIsSubscribed] = useState<any>();
-  const [isOwner, setIsOwner] = useState<any>();
+  const [isRequested, setIsRequested] = useState<boolean>(false);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -40,6 +40,12 @@ const Detail = () => {
         const isbn = await contract.methods.isbn().call();
         const cover = await contract.methods.cover().call();
         const description = await contract.methods.description().call();
+
+        const isRequested = await contract.methods
+          .isRequested()
+          .call({ from: accounts[0] });
+
+        setIsRequested(isRequested);
 
         setContract(contract);
         setAccount(accounts[0]);
@@ -108,25 +114,32 @@ const Detail = () => {
           </Table>
           <div>
             {!isOwner ? (
-              <RequestDialog
-                title={title}
-                author={author}
-                publisher={publisher}
-                isbn={isbn}
-                releaseDate={releaseDate}
-                contract={contract}
-                account={account}
-                owner={owner}
-              />
+              !isRequested ? (
+                <RequestDialog
+                  title={title}
+                  author={author}
+                  publisher={publisher}
+                  isbn={isbn}
+                  releaseDate={releaseDate}
+                  contract={contract}
+                  account={account}
+                  owner={owner}
+                />
+              ) : (
+                <button
+                  className={`btn float-right btn-sm rounded-0 btn-warning`}
+                  disabled
+                >
+                  Requested
+                </button>
+              )
             ) : (
               <button
-                className={`btn float-right btn-sm rounded-0 ${
-                  !isOwner ? "btn-warning" : "btn-secondary"
-                }`}
+                className={`btn float-right btn-sm rounded-0 btn-secondary`}
                 style={{ padding: "5px 30px" }}
                 disabled
               >
-                {!isOwner ? "Subscribed" : "Read"}
+                Yours
               </button>
             )}
           </div>

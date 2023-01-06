@@ -45,15 +45,17 @@ const BookCard = (prop: any) => {
         setContract(contract);
         setAccount(accounts[0]);
         setOwner(owner);
-        if (owner === accounts[0]) setIsOwner(true);
+
+        if (owner === accounts[0]) {
+          setIsOwner(true);
+        }
 
         const isRequested = await contract.methods
-          .isMyRequest(accounts[0])
+          .isRequested()
           .call({ from: accounts[0] });
 
-        console.info(isRequested, "req");
-
         setIsRequested(isRequested);
+
         setTitle(title);
         setAuthor(author);
         setPublisher(publisher);

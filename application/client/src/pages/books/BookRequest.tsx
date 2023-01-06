@@ -6,7 +6,8 @@ const bookFactoryContract = require("../../contracts/BookFactory.json");
 const bookContract = require("../../contracts/Book.json");
 
 const BookRequest = () => {
-  const [books, setBooks] = useState<{}[]>([]);
+  const [myRequests, setMyRequests] = useState<{}[]>([]);
+  const [myRequestedBooks, setMyRequestedBooks] = useState<{}[]>([]);
 
   useEffect(() => {
     const init = async () => {
@@ -19,22 +20,11 @@ const BookRequest = () => {
         const contract = new web3.eth.Contract(abi, address);
         const accounts = await web3.eth.getAccounts();
 
-        const pubs = await contract.methods
-          .myRequests()
-          .call({ from: accounts[0] });
+        populateMyRequestedBooks(contract, web3, accounts[0]);
 
-        pubs.map(async (address: string, index: number) => {
-          const { abi } = bookContract;
-          const bookCont = new web3.eth.Contract(abi, address);
-          const title = await bookCont.methods.title().call();
-          const cover = await bookCont.methods.cover().call();
-          const owner = await bookCont.methods.owner().call();
+        populateMyRequests(contract, web3, accounts[0]);
 
-          setBooks((publications) => [
-            ...publications,
-            { title: title, cover: cover, owner: owner, address: address },
-          ]);
-        });
+        // my request of book
       } catch (error: any) {
         console.log(error);
       }
@@ -43,19 +33,88 @@ const BookRequest = () => {
     init();
   }, []);
 
-  const displayRequests = () => {
-    return books.map((data: any, index) => {
+  const populateMyRequestedBooks = async (
+    contract: any,
+    web3: any,
+    account: any
+  ) => {
+    try {
+      const myRequestedBooks = await contract.methods
+        .myRequestedBooks()
+        .call({ from: account });
+
+      myRequestedBooks.map(async (address: string, index: number) => {
+        const { abi } = bookContract;
+        const bookCont = new web3.eth.Contract(abi, address);
+        const title = await bookCont.methods.title().call();
+        const cover = await bookCont.methods.cover().call();
+        const owner = await bookCont.methods.owner().call();
+
+        setMyRequestedBooks((myRequestedBooks) => [
+          ...myRequestedBooks,
+          { title: title, cover: cover, owner: owner, address: address },
+        ]);
+      });
+    } catch (error: any) {
+      console.info(error);
+    }
+  };
+
+  const displayRequestedBooks = () => {
+    return myRequestedBooks.map((data: any, index) => {
       return (
         <tr key={index}>
           <td>{index + 1}</td>
-          <td>
+          {/* <td>
             <img
               src={`/img/${data.cover}`}
               alt={data.cover}
               className="img-thumbnail"
               style={{ width: "30px" }}
             />
+          </td> */}
+          {/* <td>{data.title}</td> */}
+          <td>{data.owner}</td>
+          <td>
+            <Link to={`/mybooks/${data.address}`}>Show</Link>
           </td>
+        </tr>
+      );
+    });
+  };
+
+  const populateMyRequests = async (contract: any, web3: any, account: any) => {
+    const myRequestList = await contract.methods
+      .myRequests()
+      .call({ from: account });
+
+    myRequestList.map(async (address: string, index: number) => {
+      const { abi } = bookContract;
+      const bookCont = new web3.eth.Contract(abi, address);
+      const title = await bookCont.methods.title().call();
+      const cover = await bookCont.methods.cover().call();
+      const owner = await bookCont.methods.owner().call();
+
+      setMyRequests((myRequestList) => [
+        ...myRequestList,
+        { title: title, cover: cover, owner: owner, address: address },
+      ]);
+    });
+  };
+
+  const displayRequests = () => {
+    return myRequests.map((data: any, index) => {
+      return (
+        <tr key={index}>
+          <td>{index + 1}</td>
+          {/* <td>
+            <img
+              src={`/img/${data.cover}`}
+              alt={data.cover}
+              className="img-thumbnail"
+              style={{ width: "30px" }}
+            />
+          </td> */}
           <td>{data.title}</td>
           <td>{data.owner}</td>
           <td>
@@ -68,21 +127,39 @@ const BookRequest = () => {
 
   return (
     <>
-      <h3>My Requests</h3>
-      <hr />
-      <div className="row">
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <td>#</td>
-              <td>Cover</td>
-              <td>Title</td>
-              <td>Owner</td>
-              <td>...</td>
-            </tr>
-          </thead>
-          <tbody>{displayRequests()}</tbody>
-        </table>
+      <div className="card mb-5">
+        <h4 className="card-header">List of Requested Books</h4>
+        <div className="card-body">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <td width="30">#</td>
+                {/* <td>Cover</td> */}
+                <td>Title</td>
+                {/* <td>Owner</td> */}
+                <td>...</td>
+              </tr>
+            </thead>
+            <tbody>{displayRequestedBooks()}</tbody>
+          </table>
+        </div>
+      </div>
+      <div className="card mb-5">
+        <h4 className="card-header">My Ownership Requests</h4>
+        <div className="card-body">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <td width="30">#</td>
+                {/* <td>Cover</td> */}
+                <td>Title</td>
+                <td>Owner</td>
+                <td>...</td>
+              </tr>
+            </thead>
+            <tbody>{displayRequests()}</tbody>
+          </table>
+        </div>
       </div>
     </>
   );

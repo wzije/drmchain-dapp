@@ -61,7 +61,7 @@ const AcceptDialog = (props: any) => {
               <Form.Control
                 type="text"
                 placeholder="Account Address"
-                defaultValue={props.customerAccount}
+                defaultValue={props.requestData.account}
                 disabled
               />
             </Form.Group>
@@ -70,7 +70,7 @@ const AcceptDialog = (props: any) => {
               <Form.Control
                 type="text"
                 placeholder="Public Key"
-                defaultValue={props.customerPublicKey}
+                defaultValue={props.requestData.publicKey}
                 disabled
               />
             </Form.Group>
