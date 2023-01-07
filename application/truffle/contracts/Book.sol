@@ -18,13 +18,13 @@ contract Book is Ownable {
     string private documentHash;
 
     //customer struct
-    struct RequestOwner {
+    struct Requester {
         address customer;
         string publicKey;
         uint256 date;
     }
 
-    RequestOwner private _requestOwner;
+    Requester private _requester;
 
     event Requested(address customer, string title, uint256 date);
     event RequestAccepted(address customer, string title, uint256 date);
@@ -59,15 +59,15 @@ contract Book is Ownable {
     }
 
     function requestOwner(string memory _customerPublicKey) external nonOwner {
-        require(_requestOwner.customer != msg.sender, "you requested");
-        require(_requestOwner.customer == address(0x0), "the book requested");
+        require(_requester.customer != msg.sender, "you requested");
+        require(_requester.customer == address(0x0), "the book requested");
 
-        _requestOwner.customer = msg.sender;
-        _requestOwner.publicKey = _customerPublicKey;
-        _requestOwner.date = block.timestamp;
+        _requester.customer = msg.sender;
+        _requester.publicKey = _customerPublicKey;
+        _requester.date = block.timestamp;
 
         //emit event
-        emit Requested(_requestOwner.customer, title, _requestOwner.date);
+        emit Requested(_requester.customer, title, _requester.date);
     }
 
     function getRequest()
@@ -81,31 +81,31 @@ contract Book is Ownable {
         )
     {
         require(
-            _requestOwner.customer != address(0x0),
+            _requester.customer != address(0x0),
             "the request is not available"
         );
-        return (_requestOwner.customer, _requestOwner.publicKey, documentHash);
+        return (_requester.customer, _requester.publicKey, documentHash);
     }
 
     function isMyRequest(address customer) public view returns (bool) {
-        return _requestOwner.customer == customer;
+        return _requester.customer == customer;
     }
 
     function isRequested() public view returns (bool) {
-        return _requestOwner.customer != address(0x00);
+        return _requester.customer != address(0x00);
     }
 
     function acceptRequest(string memory _hashDocument) external onlyOwner {
         require(
-            _requestOwner.customer != address(0x0),
+            _requester.customer != address(0x0),
             "the request is not available"
         );
 
         documentHash = _hashDocument;
-        _transferOwnership(_requestOwner.customer);
+        _transferOwnership(_requester.customer);
 
-        emit RequestAccepted(_requestOwner.customer, title, block.timestamp);
+        emit RequestAccepted(_requester.customer, title, block.timestamp);
 
-        delete _requestOwner;
+        delete _requester;
     }
 }
