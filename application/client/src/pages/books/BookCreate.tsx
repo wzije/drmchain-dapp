@@ -29,7 +29,7 @@ const BookFactoryContract = require("../../contracts/BookFactory.json");
 // PDF VIEWER CONFIG
 const workerUrl = require("pdfjs-dist/build/pdf.worker.entry");
 
-const ipfsProxyEndPoint = "http://127.0.0.1:8080";
+const fileProxyEndPoint = "http://127.0.0.1:8080";
 
 const BookCreate = () => {
   const [contract, setContract] = useState<any>();
@@ -103,44 +103,53 @@ const BookCreate = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    // validasi eksistensi variabel file
     if (files.file === undefined) return;
 
+    // deklarasi variabel file
     const file: File = files.file;
 
-    // upload files
+    // membuat objek formdata
     var formData = new FormData();
 
+    // membuat / mengisi data yang dibutuhkan dalam format json
     const jsonMetaData = {
       title: title,
       author: author,
       publisher: publisher,
       releaseDate: releaseDate,
       isbn: isbn,
-      // description: description,
       cover: cover,
     };
 
+    // memasukkan nilai formdata
     formData.append("metadata", JSON.stringify(jsonMetaData));
     formData.append("document", file);
 
+    // inisialisasi nilai hashFile
     let hashFile = "";
 
+    // proses pengiriman data dan file ke aplikasi File-Proxy
     await axios
-      .post(`${ipfsProxyEndPoint}/upload`, formData, {
+      .post(`${fileProxyEndPoint}/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
+        // memasukkan hash file setelah proses pengiriman data berhasil
+        // jika tidak berhasil, akan ditampilkan ke log
         if (response.status === 200) hashFile = response.data;
       })
       .catch(console.error);
 
-    // disini proses enkripsi
+    // proses enkripsi hashfile menggunakan konci publik pengguna
     let encryptedHash = await Encrypt(hashFile, GetPublicKey(privateKey));
 
+    // validasi jika proses enkripsi gagal
     if (!encryptedHash) Alert("encryption process failed.");
 
+    // mengirim data ke Smart Contract / menyimpan data dalam blockchain
     const tx = await contract.methods
       .createBook(
         title,
@@ -155,14 +164,10 @@ const BookCreate = () => {
       )
       .send({ from: account });
 
-    console.info("result", {
-      tx: tx,
-      hashFile: hashFile,
-      encryptedHash: encryptedHash,
-    });
-
+    // mereset kembali form ke setelan awal
     _resetForm();
 
+    // masuk ke halaman mybooks
     window.location.href = "/mybooks";
   };
 

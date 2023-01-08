@@ -18,8 +18,10 @@ const SubscribeDialog = (props: any) => {
     }
 
     try {
+      // mendapatkan kunci publik dari kunci privat pengguna
       const publicKey = GetPublicKey(privateKey);
 
+      // membuat permintaan hak kepemilikan pada kontrak
       const rest = await props.contract.methods
         .requestOwner(publicKey)
         .send({ from: props.account });

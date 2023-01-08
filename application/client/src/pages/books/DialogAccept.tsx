@@ -10,14 +10,13 @@ const AcceptDialog = (props: any) => {
   const handleShow = () => setShow(true);
 
   const handleSubmit = async () => {
-    // decrypt hashDocument
+    // dekripsi hashDocument
     let hashFile = await Decrypt(props.requestData.documentHash, privateKey);
 
-    // encrypt with customer public key and
+    // enkripsi hash file dengan kunci publik customer
     let newHashDocument = await Encrypt(hashFile, props.requestData.publicKey);
 
-    // console.info({ hashFile, newHashDocument }, "new hash");
-
+    // mengirimkan hash dokumen baru ke Smart Contract
     const tx = await props.contract.methods
       .acceptRequest(newHashDocument)
       .send({ from: props.owner });

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-// import "./Signature.sol";
 import "./Ownable.sol";
 
 contract Book is Ownable {
@@ -13,8 +12,6 @@ contract Book is Ownable {
     string public isbn;
     string public cover;
     string public description;
-
-    //hash yang sudah di sign dan encrypt, hanya bisa dibuka dengan kunci private owner
     string private documentHash;
 
     //customer struct
@@ -51,6 +48,7 @@ contract Book is Ownable {
         description = _description;
         documentHash = _hashDocument;
 
+        //transfer ownership to specific account
         _transferOwnership(_owner);
     }
 
@@ -95,13 +93,13 @@ contract Book is Ownable {
         return _requester.customer != address(0x00);
     }
 
-    function acceptRequest(string memory _hashDocument) external onlyOwner {
+    function acceptRequest(string memory _documentHash) external onlyOwner {
         require(
             _requester.customer != address(0x0),
             "the request is not available"
         );
 
-        documentHash = _hashDocument;
+        documentHash = _documentHash;
         _transferOwnership(_requester.customer);
 
         emit RequestAccepted(_requester.customer, title, block.timestamp);

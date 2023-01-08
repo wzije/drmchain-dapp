@@ -8,25 +8,22 @@ export const GetPublicKey = (privateKey) => {
 
 export const Encrypt = async (hashFile, publicKey) => {
   try {
-    //get publickey from private
-    // const publicKey = EthCrypto.publicKeyByPrivateKey(privateKey);
-
-    //create payload string
+    //membuat string payload
     const payloadString = JSON.stringify({
       hashFile: hashFile,
-      // signature,
     });
 
-    //encrypt payload
+    //enkripsi payload dengan kunci publik
     const encrypted = await EthCrypto.encryptWithPublicKey(
       publicKey,
       payloadString
     );
 
-    //encrypt to string
-    const encryptedDocument = EthCrypto.cipher.stringify(encrypted);
+    //konversi hasil enkripsi ke string
+    const hashFileEncrypted = EthCrypto.cipher.stringify(encrypted);
 
-    return encryptedDocument;
+    //menembalikan variabel hashFileEncrypted
+    return hashFileEncrypted;
   } catch (error) {
     console.info(error);
     return;

@@ -25,15 +25,6 @@ const ReadDialog = (props: any) => {
       .getDocument()
       .call({ from: props.owner });
 
-    console.info(
-      hashDocument,
-      "hash",
-      props.owner,
-      "owner",
-      props.contract,
-      "c"
-    );
-
     if (!hashDocument) {
       Alert("Load document failed.");
       return;
