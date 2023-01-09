@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import { Alert } from "../../utils/AlertUtil";
+import { Alert } from "../../utils/ModalUtil";
 import { Decrypt } from "../../utils/Security";
 import axios from "axios";
 const fileProxyEndPoint = "http://127.0.0.1:8080";

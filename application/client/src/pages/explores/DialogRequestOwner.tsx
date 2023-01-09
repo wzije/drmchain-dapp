@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Table } from "react-bootstrap";
-import { Alert } from "../../utils/AlertUtil";
+import { Success, Alert } from "../../utils/ModalUtil";
 import { GetPublicKey } from "../../utils/Security";
 
 const SubscribeDialog = (props: any) => {
@@ -22,13 +22,21 @@ const SubscribeDialog = (props: any) => {
       const publicKey = GetPublicKey(privateKey);
 
       // membuat permintaan hak kepemilikan pada kontrak
-      const rest = await props.contract.methods
+      const tx = await props.contract.methods
         .requestOwner(publicKey)
         .send({ from: props.account });
 
-      console.info(rest);
+      console.info(tx);
 
-      window.location.href = "/myrequests";
+      Success("The book is Requested").then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/myrequests";
+        }
+      });
+
+      setShow(false);
+
+      // window.location.href = "/myrequests";
     } catch (error: any) {
       console.info(error);
       return;

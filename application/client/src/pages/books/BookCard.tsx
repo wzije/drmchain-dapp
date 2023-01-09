@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import Web3 from "web3";
 import "./css/MyBookCard.css";
+import Web3Util from "../../utils/Web3Util";
 
 const bookContract = require("../../contracts/Book.json");
 
@@ -18,7 +19,7 @@ const BookCard = (prop: any) => {
   useEffect(() => {
     const init = async (address: any) => {
       try {
-        const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
+        const web3 = Web3Util();
         const { abi } = bookContract;
         const contract = new web3.eth.Contract(abi, address);
         const title = await contract.methods.title().call();

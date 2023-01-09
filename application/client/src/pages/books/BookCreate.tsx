@@ -16,22 +16,24 @@ import {
   TransformToolbarSlot,
 } from "@react-pdf-viewer/toolbar";
 import Web3 from "web3";
-import { Alert } from "../../utils/AlertUtil";
+import { Alert, Success } from "../../utils/ModalUtil";
 
 // CSS
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "./css/BookCreate.css";
+import Web3Util from "../../utils/Web3Util";
 
-// contract
+// register contract
 const BookFactoryContract = require("../../contracts/BookFactory.json");
 
 // PDF VIEWER CONFIG
 const workerUrl = require("pdfjs-dist/build/pdf.worker.entry");
 
-const fileProxyEndPoint = "http://127.0.0.1:8080";
-
+declare let window: any;
 const BookCreate = () => {
+  const fileProxyEndPoint = process.env.REACT_APP_FILEPROXY_ENDPOINT;
+
   const [contract, setContract] = useState<any>();
   const [account, setAccount] = useState<any>();
   const [privateKey, setPrivateKey] = useState("");
@@ -63,14 +65,19 @@ const BookCreate = () => {
 
   useEffect(() => {
     const init = async () => {
-      const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
+      const web3 = Web3Util();
       const networkID = await web3.eth.net.getId();
       const { abi } = BookFactoryContract;
       let address = BookFactoryContract.networks[networkID].address;
       let contract = new web3.eth.Contract(abi, address);
       setContract(contract);
 
-      const accounts = await web3.eth.requestAccounts();
+      // const accounts = await window.ethereum.request({
+      //   method: "eth_requestAccounts",
+      // });
+
+      const accounts = await web3.eth.getAccounts();
+
       setAccount(accounts[0]);
       setAuthorAccount(accounts[0]);
     };
@@ -101,74 +108,82 @@ const BookCreate = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    // validasi eksistensi variabel file
-    if (files.file === undefined) return;
+      // validasi eksistensi variabel file
+      if (files.file === undefined) return;
 
-    // deklarasi variabel file
-    const file: File = files.file;
+      // deklarasi variabel file
+      const file: File = files.file;
 
-    // membuat objek formdata
-    var formData = new FormData();
+      // membuat objek formdata
+      var formData = new FormData();
 
-    // membuat / mengisi data yang dibutuhkan dalam format json
-    const jsonMetaData = {
-      title: title,
-      author: author,
-      publisher: publisher,
-      releaseDate: releaseDate,
-      isbn: isbn,
-      cover: cover,
-    };
+      // membuat / mengisi data yang dibutuhkan dalam format json
+      const jsonMetaData = {
+        title: title,
+        author: author,
+        publisher: publisher,
+        releaseDate: releaseDate,
+        isbn: isbn,
+        cover: cover,
+      };
 
-    // memasukkan nilai formdata
-    formData.append("metadata", JSON.stringify(jsonMetaData));
-    formData.append("document", file);
+      // memasukkan nilai formdata
+      formData.append("metadata", JSON.stringify(jsonMetaData));
+      formData.append("document", file);
 
-    // inisialisasi nilai hashFile
-    let hashFile = "";
+      // inisialisasi nilai hashFile
+      let hashFile = "";
 
-    // proses pengiriman data dan file ke aplikasi File-Proxy
-    await axios
-      .post(`${fileProxyEndPoint}/upload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        // memasukkan hash file setelah proses pengiriman data berhasil
-        // jika tidak berhasil, akan ditampilkan ke log
-        if (response.status === 200) hashFile = response.data;
-      })
-      .catch(console.error);
+      // proses pengiriman data dan file ke aplikasi File-Proxy
+      await axios
+        .post(`${fileProxyEndPoint}/upload`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          // memasukkan hash file setelah proses pengiriman data berhasil
+          // jika tidak berhasil, akan ditampilkan ke log
+          if (response.status === 200) hashFile = response.data;
+        })
+        .catch(console.error);
 
-    // proses enkripsi hashfile menggunakan konci publik pengguna
-    let encryptedHash = await Encrypt(hashFile, GetPublicKey(privateKey));
+      // proses enkripsi hashfile menggunakan konci publik pengguna
+      let encryptedHash = await Encrypt(hashFile, GetPublicKey(privateKey));
 
-    // validasi jika proses enkripsi gagal
-    if (!encryptedHash) Alert("encryption process failed.");
+      // validasi jika proses enkripsi gagal
+      if (!encryptedHash) Alert("encryption process failed.");
 
-    // mengirim data ke Smart Contract / menyimpan data dalam blockchain
-    const tx = await contract.methods
-      .createBook(
-        title,
-        author,
-        authorAccount,
-        publisher,
-        releaseDate,
-        isbn,
-        cover,
-        description,
-        encryptedHash
-      )
-      .send({ from: account });
+      // mengirim data ke Smart Contract / menyimpan data dalam blockchain
+      const tx = await contract.methods
+        .createBook(
+          title,
+          author,
+          authorAccount,
+          publisher,
+          releaseDate,
+          isbn,
+          cover,
+          description,
+          encryptedHash
+        )
+        .send({ from: account, gas: "5500000" });
 
-    // mereset kembali form ke setelan awal
-    _resetForm();
+      console.info(tx);
 
-    // masuk ke halaman mybooks
-    window.location.href = "/mybooks";
+      _resetForm();
+
+      Success("Book Created").then((result) => {
+        if (result.isConfirmed) window.location.href = "/mybooks";
+      });
+
+      // masuk ke halaman mybooks
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const _resetForm = () => {

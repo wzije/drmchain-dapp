@@ -4,8 +4,9 @@ import { Table, Button } from "react-bootstrap";
 import Web3 from "web3";
 import AcceptDialog from "./DialogAccept";
 import ReadDialog from "./DialogReadConfirm";
-import { Alert } from "../../utils/AlertUtil";
+import { Alert } from "../../utils/ModalUtil";
 import PDFViewer from "./PDFVIewer";
+import Web3Util from "../../utils/Web3Util";
 
 const bookContract = require("../../contracts/Book.json");
 
@@ -32,7 +33,7 @@ const BookDetail = () => {
   useEffect(() => {
     const init = async (address: any) => {
       try {
-        const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
+        const web3 = Web3Util();
         const { abi } = bookContract;
         const contract = new web3.eth.Contract(abi, address);
         const accounts = await web3.eth.getAccounts();

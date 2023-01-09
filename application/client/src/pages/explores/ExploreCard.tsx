@@ -5,6 +5,7 @@ import Web3 from "web3";
 import SubscribeDialog from "./DialogRequestOwner";
 import "./css/Card.css";
 import { Link } from "react-router-dom";
+import Web3Util from "../../utils/Web3Util";
 
 const BookContract = require("../../contracts/Book.json");
 
@@ -28,10 +29,12 @@ const BookCard = (prop: any) => {
   useEffect(() => {
     const init = async (address: any) => {
       try {
-        const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
+        const web3 = Web3Util();
         const { abi } = BookContract;
         const contract = new web3.eth.Contract(abi, address);
         const accounts = await web3.eth.getAccounts();
+
+        console.info(accounts[0]);
 
         const title = await contract.methods.title().call();
         const author = await contract.methods.author().call();

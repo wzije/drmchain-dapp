@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
-import Web3 from "web3";
 import RequestDialog from "./DialogRequestOwner";
+import Web3Util from "../../utils/Web3Util";
 const BookContract = require("../../contracts/Book.json");
 
 const Detail = () => {
@@ -24,7 +24,7 @@ const Detail = () => {
   useEffect(() => {
     const init = async (address: any) => {
       try {
-        const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
+        const web3 = Web3Util();
         const { abi } = BookContract;
         const contract = new web3.eth.Contract(abi, address);
         const accounts = await web3.eth.getAccounts();

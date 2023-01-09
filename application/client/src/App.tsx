@@ -1,7 +1,7 @@
 import Topbar from "./pages/main/Topbar";
 import Routers from "./pages/main/Routers";
 import { useEffect } from "react";
-import { Alert } from "./utils/AlertUtil";
+import { Alert } from "./utils/ModalUtil";
 
 declare let window: any;
 

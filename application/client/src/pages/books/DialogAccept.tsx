@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { Encrypt, Decrypt } from "../../utils/Security";
+import { Success } from "../../utils/ModalUtil";
 
 const AcceptDialog = (props: any) => {
   const [show, setShow] = useState(false);
@@ -22,7 +23,10 @@ const AcceptDialog = (props: any) => {
       .send({ from: props.owner });
 
     console.info(tx);
-    window.location.reload();
+
+    Success("Request Accepted").then((result) => {
+      if (result.isConfirmed) window.location.href = "/myrequests";
+    });
   };
 
   return (

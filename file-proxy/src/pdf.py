@@ -37,117 +37,28 @@ class PDF:
 
         return watermark_path
 
-    def __merge(self, input_pdf, watermark):
-        output_pdf = PyPDF2.PdfWriter()
-
-        # watermark first page
-        for index in list(range(0, len(input_pdf.pages))):
-            content_page = input_pdf.pages[index]
-            mediabox = content_page.mediabox
-            if (index == 0):
-                content_page.merge_page(watermark)
-                content_page.mediabox = mediabox
-            output_pdf.add_page(content_page)
-
-        # open output file
-        output_doc = os.path.join(self.tmpdir, f"output-{uuid.uuid4()}.pdf")
-        output_file = open(output_doc, 'wb')
-
-        output_pdf.write(output_file)
-        output_file.close()
-        return output_doc
-
-    # def encrypt_and_upload(self, metadata, file) -> str:
-
-    #     # prepare and modify watermark file
-    #     watermark = self.__generate_qrcode(metadata)
-
-    #     # prepare input file / original file
-    #     input_file = self.__storeOriginalDoc(file)
-    #     input_pdf = PyPDF2.PdfReader(input_file)
-
-    #     # prepare output file
-    #     output_pdf = PyPDF2.PdfWriter()
-
-    #     # watermark first page
-    #     for index in list(range(0, len(input_pdf.pages))):
-    #         content_page = input_pdf.pages[index]
-    #         mediabox = content_page.mediabox
-    #         if (index == 0):
-    #             content_page.merge_page(watermark)
-    #             content_page.mediabox = mediabox
-    #         output_pdf.add_page(content_page)
-
-    #     # open output file
-    #     output_doc = os.path.join(self.tmpdir, f"output-{uuid.uuid4()}.pdf")
-    #     output_file = open(output_doc, 'wb')
-    #     output_pdf.write(output_file)
-
-    #     # generate & encrypt
-    #     output_token = util.compute_sha256(output_doc, metadata)
-    #     output_pdf.encrypt(output_token)
-
-    #     encrypted_doc = os.path.join(self.tmpdir, f"encrypted-{uuid.uuid4()}.pdf")
-
-    #     with open(encrypted_doc, "wb") as file:
-    #         output_pdf.write(file)
-
-    #     # upload to ipfs
-    #     with open(encrypted_doc, "rb") as file:
-    #         fs = ipfs.IPFS()
-    #         hash_file = fs.upload(file)
-
-    #     input_file.close()
-    #     output_file.close()
-
-    #     self.___clearExistingFiles()
-
-    #     return (hash_file, output_token)
-
-    # def download_encrypted(self, hash_file, token):
-
-    #     self.___clearExistingFiles()
-
-    #     fs = ipfs.IPFS()
-    #     response = fs.fetch(hash_file)
-
-    #     save_path = os.path.join(self.tmpdir, f"response-encrypted-{uuid.uuid4()}.pdf")
-    #     with open(save_path, 'wb') as file:
-    #         file.write(response.content)
-
-    #     file = open(save_path, 'rb')
-    #     pdf = PyPDF2.PdfReader(file)
-    #     if pdf.is_encrypted:
-    #         pdf.decrypt(token)
-
-    #     writer = PyPDF2.PdfWriter()
-    #     for page in pdf.pages:
-    #         writer.add_page(page)
-
-    #     decrypted_path = os.path.join(self.tmpdir, f"response-decrypted-{uuid.uuid4()}.pdf")
-    #     with open(decrypted_path, "wb") as f:
-    #         writer.write(f)
-
-    #     return decrypted_path
-
     def watermark_and_upload(self, metadata, file) -> str:
 
-        # get watermark pdf
+        # generate qrcode dari data dan disimpan dalam format pdf
         watermark_path = self.__generate_qrcode(metadata)
+
+        # membuka dan mengekstrak watermark file
         watermark_file = open(watermark_path, 'rb')
         watermark_pdf = PyPDF2.PdfReader(watermark_file)
         watermark_page = watermark_pdf.pages[0]
         watermark_page_scale = PyPDF2.Transformation().scale(sx=0.2, sy=0.2)
         watermark_page.add_transformation(watermark_page_scale)
 
-        # get input pdf
+        # menyimpan file pdf utama dari client
         input_path = self.__store_input(file)
+        # membuka dan membaca file utama
         input_file = open(input_path, 'rb')
         input_pdf = PyPDF2.PdfReader(input_file)
 
-        # write output pdf
+        # mempersiapkan pembuatan file pdf baru
         output_pdf = PyPDF2.PdfWriter()
 
+        # proses ekstraksi dan penggabungan watermark ke file utama
         for index in list(range(0, len(input_pdf.pages))):
             content_page = input_pdf.pages[index]
             mediabox = content_page.mediabox
@@ -156,21 +67,25 @@ class PDF:
                 content_page.mediabox = mediabox
             output_pdf.add_page(content_page)
 
+        # mempersiapkan path hasil penggabungan file
         output_doc = os.path.join(self.tmpdir, f"output-{uuid.uuid4()}.pdf")
+        # menyimpan hasil penggabungan dokumen ke alamat penyimpanan
         with open(output_doc, 'wb') as output_file:
             output_pdf.write(output_file)
 
+        # stop dan bersihkan memori yang digunakan dalam proses pengolahan file
         watermark_file.close()
         input_file.close()
 
-        # upload to ipfs
+        # mengunggah file hasil gabungan ke cloud storage IFFS (infura)
         with open(output_doc, 'rb') as file:
-            fs = IPFS()
-            hash_file = fs.upload(file)
+            cloud = IPFS()
+            hash_file = cloud.upload(file)
 
-        # clear store files
+        # bersihkan file dalam storage
         self.___clearExistingFiles()
 
+        # mengembalikan data hash_file dari ipfs
         return hash_file
 
     def get_file(self, hash_file: str):
@@ -178,10 +93,6 @@ class PDF:
         # fetch file from ipfs
         fs = IPFS()
         response = fs.fetch(hash_file)
-        
-          #     save_path = os.path.join(self.tmpdir, f"response-encrypted-{uuid.uuid4()}.pdf")
-    #     with open(save_path, 'wb') as file:
-    #         file.write(response.content)
 
         return response.content
 

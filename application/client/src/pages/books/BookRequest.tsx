@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
+import Web3Util from "../../utils/Web3Util";
 
 const bookFactoryContract = require("../../contracts/BookFactory.json");
 const bookContract = require("../../contracts/Book.json");
@@ -12,7 +13,7 @@ const BookRequest = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
+        const web3 = Web3Util();
         const { abi } = bookFactoryContract;
         const networkID = await web3.eth.net.getId();
         let address = bookFactoryContract.networks[networkID].address;
