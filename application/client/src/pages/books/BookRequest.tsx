@@ -66,16 +66,7 @@ const BookRequest = () => {
       return (
         <tr key={index}>
           <td>{index + 1}</td>
-          {/* <td>
-            <img
-              src={`/img/${data.cover}`}
-              alt={data.cover}
-              className="img-thumbnail"
-              style={{ width: "30px" }}
-            />
-          </td> */}
-          {/* <td>{data.title}</td> */}
-          <td>{data.owner}</td>
+          <td>{data.title}</td>
           <td>
             <Link to={`/mybooks/${data.address}`}>Show</Link>
           </td>
@@ -108,14 +99,6 @@ const BookRequest = () => {
       return (
         <tr key={index}>
           <td>{index + 1}</td>
-          {/* <td>
-            <img
-              src={`/img/${data.cover}`}
-              alt={data.cover}
-              className="img-thumbnail"
-              style={{ width: "30px" }}
-            />
-          </td> */}
           <td>{data.title}</td>
           <td>{data.owner}</td>
           <td>

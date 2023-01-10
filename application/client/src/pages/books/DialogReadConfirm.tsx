@@ -32,6 +32,13 @@ const ReadDialog = (props: any) => {
 
     const hashFile = await Decrypt(hashDocument, privateKey);
 
+    if (!hashFile) {
+      Alert("Decrypt document failed.");
+      return;
+    }
+
+    console.info(hashDocument, hashFile, "hashfile");
+
     await axios({
       method: "post",
       url: `${fileProxyEndPoint}/get`,

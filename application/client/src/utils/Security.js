@@ -32,6 +32,7 @@ export const Encrypt = async (hashFile, publicKey) => {
 
 export const Decrypt = async (hashDocument, privateKey) => {
   try {
+    console.info(hashDocument, privateKey, "suck");
     //parse hashDocument to object
     const encryptedObject = EthCrypto.cipher.parse(hashDocument);
 
@@ -41,6 +42,7 @@ export const Decrypt = async (hashDocument, privateKey) => {
       encryptedObject
     );
 
+    console.info(encryptedObject, decrypted, "ddddd");
     // decrypt payload stirng to json
     const decryptedPayload = JSON.parse(decrypted);
 
