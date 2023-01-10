@@ -24,7 +24,7 @@ contract Book is Ownable {
     Requester private _requester;
 
     event Requested(address customer, string title, uint256 date);
-    event RequestAccepted(address customer, string title, uint256 date);
+    event RequestAccepted(address from, address to, string title, uint256 date);
 
     constructor(
         string memory _title,
@@ -102,7 +102,12 @@ contract Book is Ownable {
         documentHash = _documentHash;
         _transferOwnership(_requester.customer);
 
-        emit RequestAccepted(_requester.customer, title, block.timestamp);
+        emit RequestAccepted(
+            msg.sender,
+            _requester.customer,
+            title,
+            block.timestamp
+        );
 
         delete _requester;
     }
