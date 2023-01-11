@@ -7,6 +7,7 @@ import ReadDialog from "./DialogReadConfirm";
 import { Alert } from "../../utils/ModalUtil";
 import PDFViewer from "./PDFVIewer";
 import Web3Util from "../../utils/Web3Util";
+import LogPrinter from "../loggers/LogPrinter";
 
 const bookContract = require("../../contracts/Book.json");
 
@@ -79,7 +80,7 @@ const BookDetail = () => {
               });
             })
             .catch((error: any) => {
-              console.log(error);
+              // console.log(error);
             });
         }
       } catch (err) {
@@ -184,6 +185,13 @@ const BookDetail = () => {
           )}
         </div>
       </div>
+      <hr />
+      {contract ? (
+        <LogPrinter contract={contract} bookContract={bookContract} />
+      ) : (
+        <></>
+      )}
+      <hr />
       <div className="document-viewer mb-5">{displayDocument()}</div>
     </>
   );

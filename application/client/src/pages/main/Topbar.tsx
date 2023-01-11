@@ -59,6 +59,9 @@ const Topbar = () => {
                   My Request
                 </NavLink>
               </NavDropdown>
+              <NavLink className="nav-link" to="logs">
+                Logs
+              </NavLink>
             </Nav>
           </Navbar.Collapse>
         </Container>

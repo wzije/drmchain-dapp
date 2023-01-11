@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import RequestDialog from "./DialogRequestOwner";
 import Web3Util from "../../utils/Web3Util";
+import LogPrinter from "../loggers/LogPrinter";
 const BookContract = require("../../contracts/Book.json");
 
 const Detail = () => {
@@ -143,6 +144,14 @@ const Detail = () => {
               </button>
             )}
           </div>
+        </div>
+        <hr />
+        <div>
+          {contract ? (
+            <LogPrinter contract={contract} bookContract={BookContract} />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>

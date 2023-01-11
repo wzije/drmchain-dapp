@@ -6,6 +6,7 @@ import NotFound from "../errors/Notfound";
 import BookIndex from "../books/Bookindex";
 import BookDetail from "../books/BookDetail";
 import BookRequest from "../books/BookRequest";
+import LogDecoder from "../loggers/LogDecoder";
 
 const Routers = () => (
   <Routes>
@@ -16,6 +17,7 @@ const Routers = () => (
     <Route path="mybooks/:address" element={<BookDetail />} />
     <Route path="myrequests" element={<BookRequest />} />
     <Route path="create" element={<Create />} />
+    <Route path="logs" element={<LogDecoder />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 );

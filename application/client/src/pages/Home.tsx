@@ -18,7 +18,8 @@ const Home = () => {
         let contract = new web3.eth.Contract(abi, address);
 
         const books = await contract.methods.books(10, 0).call();
-        setBooks(books);
+
+        setBooks(books ? books : []);
       } catch (err) {
         console.log(err);
       }

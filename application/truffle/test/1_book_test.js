@@ -16,7 +16,8 @@ contract("Book", (accounts) => {
 
   describe("Publish A Book", () => {
     beforeEach(async () => {
-      book = await BookContract.new(
+      book = await BookContract.new();
+      await book.create(
         title,
         author,
         authorAccount,
@@ -80,7 +81,8 @@ contract("Book", (accounts) => {
     const newHashDocument = documentHash + customerPublicKey;
 
     before(async () => {
-      book = await BookContract.new(
+      book = await BookContract.new();
+      await book.create(
         title,
         author,
         authorAccount,

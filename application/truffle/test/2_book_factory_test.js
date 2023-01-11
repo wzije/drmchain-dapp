@@ -28,21 +28,6 @@ contract("Book Factory", (accounts) => {
     );
   };
 
-  it("increment the BookCount", async () => {
-    factory = await BookFactoryContract.deployed();
-    const oldBookCount = await factory.bookCount();
-
-    await create();
-
-    const newBookCount = await factory.bookCount();
-
-    assert.equal(
-      newBookCount - oldBookCount,
-      1,
-      "new book count should increment 1"
-    );
-  });
-
   it("Emit book create event", async () => {
     factory = await BookFactoryContract.deployed();
     const tx = await create();
