@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 const LogPrinter = (props: any) => {
   const [show, setShow] = useState(false);
@@ -15,7 +16,6 @@ const LogPrinter = (props: any) => {
         .map((o: any) => {
           const name = o.name;
 
-          console.info(name);
           props.contract
             .getPastEvents(o.name, {
               fromBlock: 0,
@@ -26,7 +26,6 @@ const LogPrinter = (props: any) => {
             });
         });
 
-      console.info(_logs);
       setLogs(_logs);
     };
 
@@ -42,19 +41,11 @@ const LogPrinter = (props: any) => {
       >
         Logs
       </Button>
-      <div>
+      <div style={{ fontSize: "9pt" }}>
         {props.contract !== null && show ? (
-          <pre
-            style={{
-              fontSize: "10pt",
-              display: "block",
-              fontFamily: "monospace",
-              whiteSpace: "pre-wrap",
-              margin: "1em 0",
-            }}
-          >
+          <SyntaxHighlighter language="json">
             {JSON.stringify(logs, null, 2)}
-          </pre>
+          </SyntaxHighlighter>
         ) : (
           <></>
         )}

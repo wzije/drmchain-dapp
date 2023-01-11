@@ -84,6 +84,7 @@ const Detail = () => {
             style={{ width: "200px" }}
           />
         </div>
+        <br />
         <div className="col-md-9">
           <Table striped>
             <tbody>
@@ -145,8 +146,9 @@ const Detail = () => {
             )}
           </div>
         </div>
-        <hr />
+        <br />
         <div>
+          <hr />
           {contract ? (
             <LogPrinter contract={contract} bookContract={BookContract} />
           ) : (
