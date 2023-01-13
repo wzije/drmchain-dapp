@@ -51,7 +51,6 @@ const Detail = () => {
         setContract(contract);
         setAccount(accounts[0]);
         setIsOwner(accounts[0] === owner);
-        // setIsSubscribed(isSubscribed);
         setOwner(owner);
         setTitle(title);
         setAuthor(author);

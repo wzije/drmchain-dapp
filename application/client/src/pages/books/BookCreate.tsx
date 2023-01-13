@@ -124,6 +124,7 @@ const BookCreate = () => {
       const jsonMetaData = {
         title: title,
         author: author,
+        author_account: authorAccount,
         publisher: publisher,
         releaseDate: releaseDate,
         isbn: isbn,
