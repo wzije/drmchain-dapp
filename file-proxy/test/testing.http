@@ -1,10 +1,10 @@
-POST http://localhost:8080/upload HTTP/1.1
+POST http://localhost:8700/upload HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="metadata"
 
-"{name:'buku baru'}"
+"{name:'abandon-kingdom'}"
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="document"; filename="doc.pdf"
 Content-Type: application/pdf
@@ -20,11 +20,11 @@ Content-Type: application/pdf
 # 3. pastikan pengguna asli dengan watermark (ini masih bisa di improve)
 # 4. semua prosedur diluar sistem dapat diserahkan kepada penegak hukum (masih bisa diimprove dengan membuat fitur pelaporan)
 # 5. poin 4 dapat dilakukan dengan melacak melalui blockchain
-POST http://localhost:8080/get HTTP/1.1
+POST http://localhost:8700/get HTTP/1.1
 Content-Type: application/json
 
 {
-    "hash": "QmQ3YY7csu2vsMqXG6fJHBoZkpvbjuyCE27FrMmJUXzEqZ"
+    "hash": "QmTaYb595VfaZ6sRQr71qNWQLH4n3MxSTCg8sWCUdA4EbP"
 }
 
 ###

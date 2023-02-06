@@ -5,9 +5,9 @@ from waitress import serve
 app = Flask(__name__)
 curdir = os.path.abspath(os.path.dirname(__file__))
 
-import src.config
+from src.config import Config
 import src.main
 
 def run_app():
-    serve(app, host="0.0.0.0", port=9090)
-    
+    app.run(host=Config.APP_HOST, port=Config.APP_PORT, debug=Config.APP_DEBUG)
+    # serve(app, host=Config.APP_HOST, port=Config.APP_PORT)
