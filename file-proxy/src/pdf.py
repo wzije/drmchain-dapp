@@ -5,14 +5,14 @@ import qrcode
 import PyPDF2
 from PIL import Image
 import uuid
+import src
 
 from src.ipfs import IPFS
 
 
 class PDF:
 
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    tmpdir = os.path.join(basedir, "../tmp")
+    tmpdir = os.path.join(src.curdir, "../tmp")
 
     def __store_input(self, file):
         file_path = os.path.join(self.tmpdir, f"original-{uuid.uuid4()}.pdf")

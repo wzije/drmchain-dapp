@@ -2,15 +2,16 @@ from flask import request, jsonify
 from src import app
 from src.pdf import PDF
 from flask_cors import cross_origin, CORS
+from src.config import Config
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Note: anggap semua sukses, error biarlah
 @cross_origin()
-@app.route("/")
-def hello_world():
-    return "<p>File Proxy!</p>"
+@app.route("/", methods=['GET'])
+def home():
+    return "File Proxy App is Running..."
 
 @cross_origin()
 @app.route("/upload", methods=['POST'])

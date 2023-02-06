@@ -1,13 +1,13 @@
 
 import requests
+from src.config import Config
 
 
 class IPFS:
 
-    __projectId = "2HLQVCRYTp1mvSFjZhErcumtT4C"
-    __projectSecret = "185b74165b211e96cfc7b54554ac0360"
-    __endpoint = "https://ipfs.infura.io:5001"
-    # __endpoint = "https://wzije.infura-ipfs.io/ipfs"
+    __ipfsId = Config.IPFS_ID
+    __ipfsSecret = Config.IPFS_SECRET
+    __ipfsEndpoint = Config.IPFS_ENDPOINT
 
     def upload(self, file) -> str:
         
@@ -16,9 +16,9 @@ class IPFS:
         }
         
         response = requests.post(
-            self.__endpoint + '/api/v0/add',
+            self.__ipfsEndpoint + '/api/v0/add',
             files=files,
-            auth=(self.__projectId, self.__projectSecret)
+            auth=(self.__ipfsId, self.__ipfsSecret)
         )
         
         body = response.json()
@@ -32,9 +32,9 @@ class IPFS:
         }
         
         response = requests.post(
-            self.__endpoint + '/api/v0/cat',
+            self.__ipfsEndpoint + '/api/v0/cat',
             params=params,
-            auth=(self.__projectId, self.__projectSecret)
+            auth=(self.__ipfsId, self.__ipfsSecret)
         )
         
         
