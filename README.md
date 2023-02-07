@@ -32,6 +32,9 @@ DRMChain DApp adalah contoh aplikasi yang mengimplementasi sistem Perlindungan H
     <li><a href="#kebutuhan-sistem">Kebutuhan Sistem</a></li>
     <li><a href="#prasyarat">Prasyarat</a></li>
     <li><a href="#instalasi-dan-menjalankan-aplikasi">Instalasi dan Menjalankan Aplikasi</a></li>
+    <li><a href="#cara-menggunakan">Cara Menggunakan</a></li>
+     <li><a href="#kontak">Kontak</a></li>
+      <li><a href="#lisensi">Lisensi</a></li>
 </ul>
 
 </br>
@@ -119,11 +122,45 @@ Sistem ini terdiri dari dua buah aplikasi, yaitu: Main-App dan File-Proxy. Aplik
 
 ## Instalasi dan Menjalankan Aplikasi
 
-Selanjutnya jalankan semua aplikasi. Langkah-langkahnya sbb:
+Setelah semua dependensi terinstall, langkah selanjutnya adalah menginstall dan menjalankan kedua aplikasi tersebut. Kita akan secara berurutan menjalankan aplikasi File-Proxy terlebih dahulu sebelum aplikasi Main-App dijalankan. Hal tersebut karena aplikasi File-Praxy akan menjadi service yang digunakan oleh aplikasi Main-App. Berikut tahapannya:
 
 <br/>
 
-### **Aplikasi Main-App**
+### **Aplikasi File-Proxy (Flask)**
+
+1. buka terminal baru, masuk ke direktori file-proxy.
+2. install library
+
+   ```sh
+   # menggunakan virtual env (optional)
+   python3 -m venv venv
+   source venv/bin/activate
+
+   # install library
+   pip install -r requirements.txt
+   ```
+
+3. Setup konfigurasi file `.env` dengan akun infura. bagian ini anda diharuskan membuat akun infura ([disini](https://app.infura.io/)) dan membuat KEY IPFS baru dengan menekan tombol `CREATE NEW KEY` dan memilih Network `IPFS`. Perlu diketahui, meskipun membuat KEY IPFS `"GRATIS"`, akan tapi anda diwajibkan mengisi data `kartu kredit` anda. Info lebih lanjut [Infura](https://www.infura.io/pricing).
+
+   Apabila anda berhasil membuat KEY IFPS, anda akan mendapatkan `PROJECT_ID` dan `API KEY SECRET`. silakan masukkan kedua variabel tersebut ke env variabel dalam projek.
+
+   ```sh
+   # .env file
+   IPFS_ID = "xxxxxxx"
+   IPFS_SECRET = "xxxxxxxx"
+   IPFS_ENDPOINT = "https://ipfs.infura.io:5001"
+   ```
+
+4. jalankan file `run.sh`
+   ```sh
+   ./run.sh
+   INFO:waitress:Serving on http://127.0.0.1:8080
+   ```
+5. Sampai disini apabila tidak ada kendala, berarti aplikasi File-Proxy sudah jalan. Anda dapat memeriksanya pada browser dengan memasukkan alamat `http://127.0.0.1:8080`.
+
+<br/>
+
+### **Aplikasi Main-App (Reactjs)**
 
 Terdiri dari dua direktori, yaitu `client` dan `truffle`. Direktori `client` adalah aplikasi utama yang berisi fungsi dan UI (reactjs). Sedangkan direktori `truffle` digunakan untuk menulis kode kontrak (solidity) dan deployment ke jaringan ethereum. Berikut tahapan menjalankan aplikasi main-app:
 
@@ -200,7 +237,17 @@ Terdiri dari dua direktori, yaitu `client` dan `truffle`. Direktori `client` ada
    yarn install
    ```
 
-8. jalankan aplikasi
+8. setup konfigurasi react pada file .env
+
+   ```sh
+   REACT_APP_FILEPROXY_ENDPOINT= http://127.0.0.1:8700
+
+   REACT_APP_ETH_NETWORK = "ganache"
+   REACT_APP_ETH_HOST = 127.0.0.1
+   REACT_APP_ETH_PORT = 7547
+   ```
+
+9. Jalankan aplikasi
 
    ```sh
    # menggunakan npm
@@ -232,22 +279,26 @@ Terdiri dari dua direktori, yaitu `client` dan `truffle`. Direktori `client` ada
    No issues found.
    ```
 
-9. Sampai disini aplikasi sudah jalan, selanjutnya buka browser (chrome is better) dan masuk ke alamat `http://localhost:3000`
+10. Sampai disini aplikasi sudah jalan, selanjutnya buka browser (chrome, recommended) dan masuk ke alamat `http://127.0.0.1:3000`
 
 <br/>
 
-### **Aplikasi File-Proxy**
+## Cara Menggunakan
 
-1. buka terminal baru, dan masuk ke direktori file-proxy.
-2. install library
+1. Masuk ke aplikasi dengan membuka browser dan memasukkan alamat `http://127.0.0.1:3000`
+2. Tambahkan dua akun ethereum pada Ganache ke metamask, dengan cara mamasukkan kunci privatnya. Kedua akun tersebut dapat diberi nama `author` dan `customer`
+3. jika persiapan tersebut sudah, selanjutnya dapat melakukan transaksi pada aplikasi.
 
-   ```sh
-   # menggunakan virtual env (optional)
-   python3 -m venv venv
-   source venv/bin/activate
+<br/>
 
-   # install library
-   pip install -r requirements.txt
-   ```
+## Kontak
 
-3.
+Email: jehan.labs@gmail.com
+
+Project: https://github.com/wzije/drmchain-dapp.git
+
+<br>
+
+## Lisensi
+
+Distributed under the MIT License.

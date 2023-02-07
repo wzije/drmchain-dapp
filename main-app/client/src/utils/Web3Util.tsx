@@ -10,7 +10,7 @@ const Web3Util = (): Web3 => {
   // );
   // const web3: Web3 = new Web3(new Web3.providers.HttpProvider(local));
 
-  const provider = `ws://${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}`;
+  const provider = `ws://${process.env.REACT_APP_ETH_HOST}:${process.env.REACT_APP_ETH_PORT}`;
   const web3: Web3 = new Web3(Web3.givenProvider || provider);
 
   // Creating a signing account from a private key
