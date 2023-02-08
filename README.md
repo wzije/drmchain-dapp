@@ -167,6 +167,9 @@ Atau anda dapat menjalankan kedua aplikasi tersebut secara manual dengan mengiku
 
    ```sh
    # .env file
+   APP_HOST = 0.0.0.0
+   APP_PORT = 8700
+   APP_DEBUG = True
    IPFS_ID = "xxxxxxx"
    IPFS_SECRET = "xxxxxxxx"
    IPFS_ENDPOINT = "https://ipfs.infura.io:5001"
@@ -177,7 +180,7 @@ Atau anda dapat menjalankan kedua aplikasi tersebut secara manual dengan mengiku
    ./run.sh
    INFO:waitress:Serving on http://127.0.0.1:8080
    ```
-5. Sampai disini apabila tidak ada kendala, berarti aplikasi File-Proxy sudah jalan. Anda dapat memeriksanya pada browser dengan memasukkan alamat `http://127.0.0.1:8080`.
+5. Sampai disini apabila tidak ada kendala, berarti aplikasi File-Proxy sudah jalan. Anda dapat memeriksanya pada browser dengan memasukkan alamat `http://127.0.0.1:8700`.
 
 <br/>
 
