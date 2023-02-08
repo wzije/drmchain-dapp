@@ -3,7 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { Alert } from "../../utils/ModalUtil";
 import { Decrypt } from "../../utils/Security";
 import axios from "axios";
-const fileProxyEndPoint = "http://127.0.0.1:8080";
+const fileProxyEndPoint = process.env.REACT_APP_FILEPROXY_ENDPOINT;
 
 const ReadDialog = (props: any) => {
   const [show, setShow] = useState(false);
