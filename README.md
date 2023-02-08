@@ -313,11 +313,9 @@ Terdiri dari dua direktori, yaitu `client` dan `truffle`. Direktori `client` ada
 
    Lebih jelasnya dapat dilihat pada [demo](https://youtu.be/SpblWYvW7so) berikut:
 
-   <br/>
+   [![drmcahin demo](https://img.youtube.com/vi/SpblWYvW7so/mqdefault.jpg)](https://youtu.be/SpblWYvW7so)
 
-   <video width="75%"  controls>
-      <source src="./tmp/demo.mp4" type="video/mp4">
-   </video>
+   <br/>
 
 <br/>
 
