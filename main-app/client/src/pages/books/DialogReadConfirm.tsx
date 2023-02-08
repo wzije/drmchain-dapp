@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { Alert } from "../../utils/ModalUtil";
-import { Decrypt, GetPublicKey } from "../../utils/Security";
+import { Decrypt } from "../../utils/Security";
 import axios from "axios";
 const fileProxyEndPoint = "http://127.0.0.1:8080";
 
@@ -25,30 +25,17 @@ const ReadDialog = (props: any) => {
       .getDocument()
       .call({ from: props.owner });
 
-    console.info(hashDocument, "hadoc");
-
     if (!hashDocument) {
       Alert("Load document failed.");
       return;
     }
 
     const hashFile = await Decrypt(hashDocument, privateKey);
-    console.info(hashFile, "hashfile");
 
     if (!hashFile) {
       Alert("Decrypt document failed.");
       return;
     }
-
-    // const publicKey = await GetPublicKey(privateKey, account);
-
-    // console.info({
-    //   account: "0x88949744700f697259274f766815970d8581556F",
-    //   // privateKey: privateKey,
-    //   publicKey: publicKey,
-    //   hashFile: hashFile.hash,
-    //   hashFileEncrypted: hashDocument,
-    // });
 
     await axios({
       method: "post",

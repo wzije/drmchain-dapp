@@ -1,3 +1,5 @@
+import { Alert } from "./ModalUtil";
+
 const EthCrypto = require("eth-crypto");
 
 const Security = async () => {};
@@ -6,8 +8,8 @@ export const GetPublicKey = (privateKey, address) => {
   const publicKey = EthCrypto.publicKeyByPrivateKey(privateKey);
   const pubAddress = EthCrypto.publicKey.toAddress(publicKey);
 
-  if (address != pubAddress) {
-    alert(
+  if (address !== pubAddress) {
+    Alert(
       "something when wrong when generate public key is failed, please try again."
     );
   }
@@ -52,8 +54,6 @@ export const Decrypt = async (hashDocument, privateKey) => {
 
     // decrypt payload stirng to json
     const decryptedPayload = JSON.parse(decrypted);
-
-    console.info(decryptedPayload, "payload");
 
     return decryptedPayload.hashFile;
   } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import RequestDialog from "./DialogRequestOwner";
 import Web3Util from "../../utils/Web3Util";
@@ -30,9 +30,6 @@ const Detail = () => {
         const contract = new web3.eth.Contract(abi, address);
         const accounts = await web3.eth.getAccounts();
         const owner = await contract.methods.owner().call();
-        // const isSubscribed = await contract.methods
-        //   .isSubscribed(accounts[0])
-        //   .call({ from: accounts[0] });
 
         const title = await contract.methods.title().call();
         const author = await contract.methods.author().call();
