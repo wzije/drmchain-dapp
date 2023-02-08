@@ -313,7 +313,11 @@ Terdiri dari dua direktori, yaitu `client` dan `truffle`. Direktori `client` ada
 
    Lebih jelasnya dapat dilihat pada demo berikut:
 
-   ![tutor](./tmp/drmchain.gif)
+   <br/>
+   
+   <video width="75%"  controls>
+      <source src="./tmp/demo.mp4" type="video/mp4">
+   </video>
 
 <br/>
 
