@@ -126,26 +126,24 @@ Setelah semua dependensi terinstall, langkah selanjutnya adalah menginstall dan 
 
 1. Jalankan aplikasi Ganache
 2. Masuk ke direktori `file-proxy`
-3. Sesuaikan konfigurasi file .env
-4. Selanjutnya jalankan file `start.sh`
+3. Sesuaikan konfigurasi file .env _(lebih jelasnya lihat tahapan manual)_
+4. Jalankan file `start.sh`
    ```sh
    cd file-proxy
    ./start.sh
-   # atau
-   # sh start.sh
    ```
-5. selanjutnya buka terminal baru kemudian masuk ke direktori `main-app`
-6. Sesuaikan konfigurasi file .env di dalam direktori truffle dan client
+5. Selanjutnya buka terminal baru kemudian masuk ke direktori `main-app`
+6. Sesuaikan konfigurasi file .env di dalam direktori truffle dan client _(lebih jelasnya lihat tahapan manual)_
 7. Jalankan file `start.sh`
    ```sh
    cd main-app
    ./start.sh
-   # atau
-   # sh start.sh
    ```
 
 <br/>
 Atau anda dapat menjalankan kedua aplikasi tersebut secara manual dengan mengikuti instruksi berikut:
+
+<br/>
 
 ### # **Aplikasi File-Proxy (Flask)**
 
@@ -178,7 +176,6 @@ Atau anda dapat menjalankan kedua aplikasi tersebut secara manual dengan mengiku
 4. jalankan file `run.sh`
    ```sh
    ./run.sh
-   INFO:waitress:Serving on http://127.0.0.1:8080
    ```
 5. Sampai disini apabila tidak ada kendala, berarti aplikasi File-Proxy sudah jalan. Anda dapat memeriksanya pada browser dengan memasukkan alamat `http://127.0.0.1:8700`.
 
@@ -313,6 +310,8 @@ Terdiri dari dua direktori, yaitu `client` dan `truffle`. Direktori `client` ada
 2. Buat jaringan baru pada metamask dan masukkan informasi jaringan ganance
 3. Tambahkan dua akun ethereum pada Ganache ke metamask, dengan cara mamasukkan kunci privatnya. Kedua akun tersebut dapat diberi nama `author` dan `customer`
 4. jika persiapan tersebut sudah, selanjutnya dapat melakukan transaksi pada aplikasi.
+
+   Lebih jelasnya dapat dilihat pada demo berikut:
 
    ![tutor](./tmp/drmchain.gif)
 
