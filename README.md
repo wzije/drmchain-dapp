@@ -89,7 +89,7 @@ Sistem ini terdiri dari dua buah aplikasi, yaitu: Main-App dan File-Proxy. Aplik
     # install NPM
     npm install npm@8.19.2 -g
 
-    # install Yarn (recommended)
+    # install Yarn
     npm install --global yarn
 
     # install truffle
@@ -109,7 +109,7 @@ Sistem ini terdiri dari dua buah aplikasi, yaitu: Main-App dan File-Proxy. Aplik
     # periksa versi pip
     pip3 --version
 
-    # install venv (optional)
+    # install venv
     pip3 install virtualenv
     ```
 
@@ -122,11 +122,32 @@ Sistem ini terdiri dari dua buah aplikasi, yaitu: Main-App dan File-Proxy. Aplik
 
 ## Instalasi dan Menjalankan Aplikasi
 
-Setelah semua dependensi terinstall, langkah selanjutnya adalah menginstall dan menjalankan kedua aplikasi tersebut. Kita akan secara berurutan menjalankan aplikasi File-Proxy terlebih dahulu sebelum aplikasi Main-App dijalankan. Hal tersebut karena aplikasi File-Praxy akan menjadi service yang digunakan oleh aplikasi Main-App. Berikut tahapannya:
+Setelah semua dependensi terinstall, langkah selanjutnya adalah menginstall dan menjalankan kedua aplikasi tersebut. Kita akan secara berurutan menjalankan aplikasi File-Proxy terlebih dahulu sebelum aplikasi Main-App dijalankan. Hal tersebut karena aplikasi File-Proxy akan menjadi service yang digunakan oleh aplikasi Main-App. Tahanpannya sebagai berikut:
+
+1. Jalankan aplikasi Ganache
+2. Masuk ke direktori `file-proxy`
+3. Sesuaikan konfigurasi file .env
+4. Selanjutnya jalankan file `start.sh`
+   ```sh
+   cd file-proxy
+   ./start.sh
+   # atau
+   # sh start.sh
+   ```
+5. selanjutnya buka terminal baru kemudian masuk ke direktori `main-app`
+6. Sesuaikan konfigurasi file .env di dalam direktori truffle dan client
+7. Jalankan file `start.sh`
+   ```sh
+   cd main-app
+   ./start.sh
+   # atau
+   # sh start.sh
+   ```
 
 <br/>
+Atau anda dapat menjalankan kedua aplikasi tersebut secara manual dengan mengikuti instruksi berikut:
 
-### **Aplikasi File-Proxy (Flask)**
+### # **Aplikasi File-Proxy (Flask)**
 
 1. buka terminal baru, masuk ke direktori file-proxy.
 2. install library
@@ -160,7 +181,7 @@ Setelah semua dependensi terinstall, langkah selanjutnya adalah menginstall dan 
 
 <br/>
 
-### **Aplikasi Main-App (Reactjs)**
+### # **Aplikasi Main-App (Reactjs)**
 
 Terdiri dari dua direktori, yaitu `client` dan `truffle`. Direktori `client` adalah aplikasi utama yang berisi fungsi dan UI (reactjs). Sedangkan direktori `truffle` digunakan untuk menulis kode kontrak (solidity) dan deployment ke jaringan ethereum. Berikut tahapan menjalankan aplikasi main-app:
 
@@ -286,8 +307,11 @@ Terdiri dari dua direktori, yaitu `client` dan `truffle`. Direktori `client` ada
 ## Cara Menggunakan
 
 1. Masuk ke aplikasi dengan membuka browser dan memasukkan alamat `http://127.0.0.1:3000`
-2. Tambahkan dua akun ethereum pada Ganache ke metamask, dengan cara mamasukkan kunci privatnya. Kedua akun tersebut dapat diberi nama `author` dan `customer`
-3. jika persiapan tersebut sudah, selanjutnya dapat melakukan transaksi pada aplikasi.
+2. Buat jaringan baru pada metamask dan masukkan informasi jaringan ganance
+3. Tambahkan dua akun ethereum pada Ganache ke metamask, dengan cara mamasukkan kunci privatnya. Kedua akun tersebut dapat diberi nama `author` dan `customer`
+4. jika persiapan tersebut sudah, selanjutnya dapat melakukan transaksi pada aplikasi.
+
+   ![tutor](./tmp/drmchain.gif)
 
 <br/>
 
