@@ -311,10 +311,10 @@ Terdiri dari dua direktori, yaitu `client` dan `truffle`. Direktori `client` ada
 3. Tambahkan dua akun ethereum pada Ganache ke metamask, dengan cara mamasukkan kunci privatnya. Kedua akun tersebut dapat diberi nama `author` dan `customer`
 4. jika persiapan tersebut sudah, selanjutnya dapat melakukan transaksi pada aplikasi.
 
-   Lebih jelasnya dapat dilihat pada demo berikut:
+   Lebih jelasnya dapat dilihat pada [demo](https://youtu.be/SpblWYvW7so) berikut:
 
    <br/>
-   
+
    <video width="75%"  controls>
       <source src="./tmp/demo.mp4" type="video/mp4">
    </video>
