@@ -327,6 +327,10 @@ Project: https://github.com/wzije/drmchain-dapp.git
 
 <br>
 
+## Dokumentasi
+
+[Dokumentasi](https://dspace.uii.ac.id/bitstream/handle/123456789/42502/18917115.pdf?sequence=1)
+
 ## Lisensi
 
 Distributed under the MIT License.
